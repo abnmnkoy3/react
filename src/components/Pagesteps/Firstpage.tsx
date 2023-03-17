@@ -52,18 +52,20 @@ function Fristpage() {
     };
     return (
         <>
-            <div >
-                <Form form={form} name="horizontal_login" layout="inline" onFinish={onFinish} style={{ overflowX: 'scroll' }}>
+            <div style={{ overflow: "auto" }}>
+                <Form style={{ flexWrap: "nowrap", padding: "40px" }} form={form} name="horizontal_login" layout="inline" onFinish={onFinish} >
                     <Form.Item
                         name="username"
                         rules={[{ required: true, message: 'Please input your username!' }]}
                     >
+                        <label style={{ padding: "5px" }}>SSDS<a style={{ color: "red" }}> *</a></label>
                         <Input placeholder="Username" />
                     </Form.Item>
                     <Form.Item
                         name="password"
                         rules={[{ required: true, message: 'Please input your password!' }]}
                     >
+                        <label style={{ padding: "5px" }}>ID<a style={{ color: "red" }}> *</a></label>
                         <Input
                             type="password"
                             placeholder="Password"
@@ -73,6 +75,7 @@ function Fristpage() {
                         name="password"
                         rules={[{ required: true, message: 'Please input your password!' }]}
                     >
+                        <label style={{ padding: "5px" }}>แผนก<a style={{ color: "red" }}> *</a></label>
                         <Select placeholder="Please select a country">
                             <Option value="china">PD 1</Option>
                             <Option value="DP2">PD 2</Option>
@@ -87,6 +90,7 @@ function Fristpage() {
                         name="CodeR/CodeN"
                         rules={[{ required: true, message: 'CodeR/CodeN' }]}
                     >
+                        <label style={{ padding: "5px" }}>CodeR/CodeN<a style={{ color: "red" }}> *</a></label>
                         <Input
                             type="text"
                             placeholder="CodeR/CodeN"
@@ -96,6 +100,7 @@ function Fristpage() {
                         name="CodeR/CodeN"
                         rules={[{ required: true, message: 'CodeR/CodeN' }]}
                     >
+                        <label style={{ padding: "5px" }}>รายชื่อผลิตภัณฑ์เคมี<a style={{ color: "red" }}> *</a></label>
                         <Input
                             type="text"
                             placeholder="รายชื่อผลิตภัณฑ์เคมี (ตาม PR)"
@@ -105,6 +110,7 @@ function Fristpage() {
                         name="CodeR/CodeN"
                         rules={[{ required: true, message: 'CodeR/CodeN' }]}
                     >
+                        <label style={{ padding: "5px" }}>ชื่อสารเคมีอันตราย / ชื่อทางการค้า<a style={{ color: "red" }}> *</a></label>
                         <Input
                             type="text"
                             placeholder="ชื่อสารเคมีอันตราย / ชื่อทางการค้า"
@@ -114,6 +120,7 @@ function Fristpage() {
                         name="CodeR/CodeN"
                         rules={[{ required: true, message: 'CodeR/CodeN' }]}
                     >
+                        <label style={{ padding: "5px" }}>CAS No.<a style={{ color: "red" }}> *</a></label>
                         <Input
                             type="text"
                             placeholder="CAS No."
@@ -123,6 +130,7 @@ function Fristpage() {
                         name="CodeR/CodeN"
                         rules={[{ required: true, message: 'CodeR/CodeN' }]}
                     >
+                        <label style={{ padding: "5px" }}>UN No.<a style={{ color: "red" }}> *</a></label>
                         <Input
                             type="text"
                             placeholder="UN No."
@@ -132,6 +140,7 @@ function Fristpage() {
                         name="CodeR/CodeN"
                         rules={[{ required: true, message: 'CodeR/CodeN' }]}
                     >
+                        <label style={{ padding: "5px" }}>วัตถุประสงค์การใช้งาน<a style={{ color: "red" }}> *</a></label>
                         <Input
                             type="text"
                             placeholder="วัตถุประสงค์การใช้งาน"
