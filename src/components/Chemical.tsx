@@ -22,14 +22,6 @@ const App: React.FC = () => {
             title: 'Step 1',
             description:<Fristpage/>,
           },
-          {
-            title: 'Step 2',
-            description,
-          },
-          {
-            title: 'Step 3',
-            description,
-          },
         ]}
       />
     </>
