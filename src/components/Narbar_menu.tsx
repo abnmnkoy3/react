@@ -151,7 +151,7 @@ function App() {
           <Layout style={{ minHeight: '100vh' }}>
             {session.logged_in == "TRUE" ? (
               <Sider collapsible theme={'dark'} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} />
+                <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} >2023</div>
                 <Menu
                   onClick={onClick}
                   openKeys={['/Login']}
