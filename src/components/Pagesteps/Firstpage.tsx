@@ -53,7 +53,14 @@ function Fristpage() {
     return (
         <>
             <div style={{ overflow: "auto" }}>
-                <Form style={{ flexWrap: "nowrap", padding: "40px" }} form={form} name="horizontal_login" layout="inline" onFinish={onFinish} >
+                <Form style={{ flexWrap: "nowrap", padding: "40px" }} form={form} name="horizontal_login" layout='inline' onFinish={onFinish} >
+                    <Form.Item style={{ marginRight: "-77px" }}>
+                        <br /><br />
+                        <br /><br />
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
                     <Form.Item
                         name="username"
                         rules={[{ required: true, message: 'Please input your username!' }]}
@@ -146,20 +153,7 @@ function Fristpage() {
                             placeholder="วัตถุประสงค์การใช้งาน"
                         />
                     </Form.Item>
-                    {/* <Form.Item shouldUpdate>
-                    {() => (
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            disabled={
-                                !form.isFieldsTouched(true) ||
-                                !!form.getFieldsError().filter(({ errors }) => errors.length).length
-                            }
-                        >
-                            Log in
-                        </Button>
-                    )}
-                </Form.Item> */}
+
                 </Form>
             </div>
         </>
