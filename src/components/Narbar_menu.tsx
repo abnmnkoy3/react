@@ -70,6 +70,7 @@ import Loginsuccess from './loginsuccess';
 import Page from './loginsuccess'
 import Chemical from './Chemical';
 import { Session } from 'inspector';
+import Home from './KPIPage/home';
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -127,6 +128,7 @@ function App() {
   const items: MenuItem[] = [
     // getItem('Login', '/Login', <PieChartOutlined />),
     getItem('HOME', '/Loginsuccess', <DesktopOutlined />),
+    getItem('INDEX', '/KPI', <DesktopOutlined />),
     getItem('Chemical', '/Chemical', <FileOutlined />),
     getItem('Signout', '/signout', <FileOutlined />),
   ];
@@ -185,6 +187,7 @@ function Contents() {
       <Route path="/" element={<Page />}></Route>
       <Route path="/Login" element={<Login />}></Route>
       <Route path="/Loginsuccess" element={<Loginsuccess />}></Route>
+      <Route path="/KPI" element={<Home />}></Route>
       <Route path="/Chemical" element={<Chemical />}></Route>
       <Route path="/signout" element={<Login />}></Route>
     </Routes>
