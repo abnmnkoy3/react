@@ -5,9 +5,9 @@ import React from "react";
 import { Space, Typography, Table, Tag } from 'antd';
 import { Col, Row } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { useState } from "react";
 
 function Table_new() {
-
     interface DataType {
         key: React.Key;
         name: string;
@@ -95,22 +95,15 @@ function Loginsuccess() {
     // console.log(session);
     return (
         <>
-            {/* <div > */}
-            {/* <BasicExample number_check={number_check} /> */}
-            {/* <AppLayout/> */}
-            <Col span={24}>
-                {/* <Card title="Card title" bordered={false} style={{ width: '100%' }}> */}
+
+            <div className="">
                 <div className="">
-                    <div className="">
-                        <Text>ชื่อพนักงาน: {session.name_title} {session.firstname} {session.lastname}</Text><br />
-                        <Text>แผนก: {session.dept} </Text><br />
-                        <Text>ส่วนงาน: {session.dvs_sub_name}</Text><br />
-                        <Text>ส่วนงาน: {session.dvs_sub_name}</Text><br />
-                    </div>
+                    <Text>ชื่อพนักงาน: {session.name_title} {session.firstname} {session.lastname}</Text><br />
+                    <Text>แผนก: {session.dept} </Text><br />
+                    <Text>ส่วนงาน: {session.dvs_sub_name}</Text><br />
+                    <Text>ส่วนงาน: {session.dvs_sub_name}</Text><br />
                 </div>
-                {/* </Card> */}
-            </Col>
-            {/* </div> */}
+            </div>
         </>
     )
 }

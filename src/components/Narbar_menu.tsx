@@ -70,6 +70,8 @@ import Loginsuccess from './loginsuccess';
 import Page from './loginsuccess'
 import Chemical from './Chemical';
 import { Session } from 'inspector';
+import Indexpage from './KPIPage/indexpage';
+import Home from './KPIPage/home';
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
