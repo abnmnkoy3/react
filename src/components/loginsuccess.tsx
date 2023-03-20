@@ -83,7 +83,6 @@ function Table_new() {
             address: `London Park no. ${i}`,
         });
     }
-
     return (
         <Table columns={columns} dataSource={data} scroll={{ y: 500 }} />
     );
