@@ -3,7 +3,7 @@ import { Divider, Table, Steps } from 'antd';
 import { useLocation } from 'react-router-dom';
 import { ColumnsType } from 'antd/es/table';
 
-function Table_data() {
+function Indexpage() {
     const { state } = useLocation();
     const { query } = state;
     let datas: string = sessionStorage.getItem("data") || '{}';
@@ -15,23 +15,23 @@ function Table_data() {
     interface DataType {
         key: React.Key;
         MTD_Objective: any;
-        MTD_Objective_Type: string;
-        MTD_Weight: string;
-        MTD_Weight_Type: string;
-        month_1: string;
-        month_2: string;
-        month_3: string;
-        month_4: string;
-        month_5: string;
-        month_6: string;
-        month_7: string;
-        month_8: string;
-        month_9: string;
-        month_10: string;
-        month_11: string;
-        month_12: string;
-        KPI_Actual: string;
-        KPI_Result: string;
+        MTD_Objective_Type: any;
+        MTD_Weight: any;
+        MTD_Weight_Type: any;
+        month_1: any;
+        month_2: any;
+        month_3: any;
+        month_4: any;
+        month_5: any;
+        month_6: any;
+        month_7: any;
+        month_8: any;
+        month_9: any;
+        month_10: any;
+        month_11: any;
+        month_12: any;
+        KPI_Actual: any;
+        KPI_Result: any;
     }
 
     const columns: ColumnsType<DataType> = [
@@ -179,8 +179,8 @@ function Table_data() {
                     KPI_Result: res[i].KPI_Result,
                 });
             }
-            console.log(data_table)
         });
+            console.log(data_table)
     return (
         <div>
             <>
@@ -290,12 +290,12 @@ function Table_data() {
 //         <Table columns={columns} dataSource={data} scroll={{ x: 2000, y: 500 }} />
 //     );
 // }
-function Indexpage() {
-    return (
-        <div style={{}}>
-            <Table_data />
-        </div>
-    )
-}
+// function Indexpage() {
+//     return (
+//         <div style={{}}>
+//             <Table_data />
+//         </div>
+//     )
+// }
 
 export default Indexpage;
