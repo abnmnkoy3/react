@@ -19,7 +19,7 @@ const App: React.FC = () => {
         direction="vertical"
         items={[
           {
-            title: 'Step 1',
+            // title: 'Step 1',
             description:<Fristpage/>,
           },
         ]}

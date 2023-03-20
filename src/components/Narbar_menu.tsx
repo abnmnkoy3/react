@@ -70,7 +70,6 @@ import Loginsuccess from './loginsuccess';
 import Page from './loginsuccess'
 import Chemical from './Chemical';
 import { Session } from 'inspector';
-import Home from './KPIPage/home';
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -127,6 +126,7 @@ function App() {
 
   const items: MenuItem[] = [
     // getItem('Login', '/Login', <PieChartOutlined />),
+    getItem('KPI', '/Indexpage', <DesktopOutlined />),
     getItem('HOME', '/Loginsuccess', <DesktopOutlined />),
     getItem('INDEX', '/KPI', <DesktopOutlined />),
     getItem('Chemical', '/Chemical', <FileOutlined />),
@@ -135,65 +135,55 @@ function App() {
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key);
     if (e.key === '/signout') {
-      // session = null;
-      // console.log(session)
       navigate('/Login')
       sessionStorage.removeItem("data");
-      // window.location.reload();
     }
     else {
-      navigate(e.key)
+      navigate(e.key, { state: { query: e.key } })
     }
   };
 
   return (
     <>
-      <Row>
-        <div style={{ display: "" }}>
-          <Layout style={{ minHeight: '100vh' }}>
-            {session.logged_in == "TRUE" ? (
-              <Sider collapsible theme={'dark'} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-                <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} >2023</div>
-                <Menu
-                  onClick={onClick}
-                  openKeys={['/Login']}
-                  defaultSelectedKeys={['/Loginsuccess']}
-                  mode="inline"
-                  theme="dark"
-                  items={items}
-                />
-              </Sider>
-            ) : ('')}
-
+      <div style={{ overflow: "auto", flexWrap: "nowrap" }}>
+        <Layout style={{ minHeight: "100vh", display: "flex"}}>
+          {session.logged_in == "TRUE" ? (
+            <Sider collapsible theme={'dark'} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+              <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} >2023</div>
+              <Menu
+                onClick={onClick}
+                openKeys={['/Login']}
+                defaultSelectedKeys={['/Loginsuccess']}
+                mode="inline"
+                theme="dark"
+                items={items}
+              />
+            </Sider>
+          ) : ('')}
+          <Layout className="site-layout" style={{background:"#adc6ff"}} >
+            <Content style={{ margin: '0', padding: "20px" }}>
+              <Contents />
+            </Content>
           </Layout>
-        </div>
-        <div style={{
-          padding: 25,
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          backgroundColor: '#d2e0fa',
-        }}>
-          <Contents />
-        </div>
-      </Row>
+        </Layout>
+      </div>
     </>
   );
 };
 function Contents() {
-
-  return (<div>
+  return (
+  <div>
     <Routes>
       <Route path="/" element={<Page />}></Route>
       <Route path="/Login" element={<Login />}></Route>
+      <Route path="/Indexpage" element={<Indexpage />}></Route>
       <Route path="/Loginsuccess" element={<Loginsuccess />}></Route>
       <Route path="/KPI" element={<Home />}></Route>
       <Route path="/Chemical" element={<Chemical />}></Route>
       <Route path="/signout" element={<Login />}></Route>
     </Routes>
-  </div>);
+  </div>
+  );
 }
-
-
 
 export default App;
