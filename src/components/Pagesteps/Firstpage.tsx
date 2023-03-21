@@ -51,56 +51,56 @@ function Fristpage() {
     interface DataType {
         // id: React.Key;
         ssds: any;
-        id_ssds: any;
-        divsion: any;
-        coden_coder: any;
-        list_chemical_products: any;
-        chemical_name: any;
-        cas_no: any;
-        un_no: any;
-        purpose_use: any;
-        substance: any;
-        characteristics: any;
-        concentration: any;
-        density: any;
-        control: any;
-        component: any;
-        un_class: any;
-        ghs_physical: any;
-        ghs_health: any;
-        ghs_environmental: any;
-        storage_type: any;
-        total_year: any;
-        unit_1: any;
-        maximum_storage: any;
-        unit_2: any;
-        container_type: any;
-        container_capacity: any;
-        container_quantity: any;
-        extinguishing: any;
-        storage_location: any;
-        area_of_use: any;
-        ordered_month: any;
-        according_the_list_1: any;
-        according_the_list_2: any;
-        delivery_status: any;
+        id_ssds: string;
+        division: string;
+        coden_coder: string;
+        list_chemical_products: string;
+        chemical_name: string;
+        cas_no: string;
+        un_no: string;
+        purpose_use: string;
+        substance: string;
+        characteristics: string;
+        concentration: string;
+        density: string;
+        control: string;
+        component: string;
+        un_class: string;
+        ghs_physical: string;
+        ghs_health: string;
+        ghs_environmental: string;
+        storage_type: string;
+        total_year: string;
+        unit_1: string;
+        maximum_storage: string;
+        unit_2: string;
+        container_type: string;
+        container_capacity: string;
+        container_quantity: string;
+        extinguishing: string;
+        storage_location: string;
+        area_of_use: string;
+        ordered_month: string;
+        according_the_list_1: string;
+        according_the_list_2: string;
+        delivery_status: string;
         delivery_date: any;
-        order_report: any;
-        order_announcement: any;
-        hazardous_chemicals: any;
+        order_report: string;
+        order_announcement: string;
+        hazardous_chemicals: string;
         measurement_record: any;
-        select_6_2: any;
-        select_6_21: any;
-        select_6_23: any;
-        select_6_32: any;
-        select_9_20: any;
-        select_9_22: any;
-        select_9_41: any;
-        related_laws: any;
-        legal_compliance: any;
-        management: any;
+        select_6_2: string;
+        select_6_21: string;
+        select_6_23: string;
+        select_6_32: string;
+        select_9_20: string;
+        select_9_22: string;
+        select_9_41: string;
+        related_laws: string;
+        legal_compliance: string;
+        management: string;
         fm_sh_17: any;
-        note: any;
+        note: string;
     }
     const onFinish = (values: any) => {
         setData_ind(values)
@@ -155,13 +155,13 @@ function Fristpage() {
                             rules={[{ required: true, message: 'แผนกที่ใช้งาน' }]}
                         >
                             <Select placeholder="Please select a country">
-                                <Option value="PD1">PD 1</Option>
-                                <Option value="DP2">PD 2</Option>
-                                <Option value="DP3">PD 3</Option>
-                                <Option value="DP4">PD 4</Option>
-                                <Option value="WHL3">WHL #3</Option>
-                                <Option value="WHL4">WHL #5</Option>
-                                <Option value="WHL5">WHL #6</Option>
+                                <Option value="1">PD 1</Option>
+                                <Option value="2">PD 2</Option>
+                                <Option value="3">PD 3</Option>
+                                <Option value="4">PD 4</Option>
+                                <Option value="5#3">WHL #3</Option>
+                                <Option value="6">WHL #5</Option>
+                                <Option value="7">WHL #6</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
@@ -756,81 +756,5 @@ function Fristpage() {
         </>
     )
 }
-
-
-
-// function Fristpage() {
-//     return (
-//         <>
-//             <Form
-//                 name="validate_other"
-//                 {...formItemLayout}
-//                 onFinish={onFinish}
-//                 initialValues={{ 'input-number': 3, 'checkbox-group': ['A', 'B'], rate: 3.5 }}
-//                 style={{ maxWidth: 600 }}
-//             >
-//                 <Form.Item label="BirthDate" style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}>
-//                     {/* <Form.Item name="dragger" valuePropName="fileList" getValueFromEvent={normFile} noStyle>
-//                             <Upload.Dragger name="files" action="/upload.do">
-//                                 <p className="ant-upload-drag-icon">
-//                                     <InboxOutlined />
-//                                 </p>
-//                                 <p className="ant-upload-text">Click or drag file to this area to upload</p>
-//                                 <p className="ant-upload-hint">Support for a single or bulk upload.</p>
-//                             </Upload.Dragger>
-//                         </Form.Item> */}
-
-//                     <Form.Item
-//                         name="KEY"
-//                         rules={[{ required: true }]}
-//                         style={{ display: 'inline-block', width: 'calc(50% - 8px)' }}
-//                     >
-//                         <Input placeholder="KEY" />
-//                     </Form.Item>
-//                     <Form.Item
-//                         name="แผนก"
-//                         label="แผนก"
-//                         hasFeedback
-//                         rules={[{ required: true, message: 'Please select your country!' }]}
-//                         style={{ display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px' }}
-//                     >
-//                         <Select placeholder="Please select a country">
-//                             <Option value="china">PD 1</Option>
-//                             <Option value="DP2">PD 2</Option>
-//                             <Option value="DP3">PD 3</Option>
-//                             <Option value="DP4">PD 4</Option>
-//                             <Option value="WHL3">WHL #3</Option>
-//                             <Option value="WHL4">WHL #5</Option>
-//                             <Option value="WHL5">WHL #6</Option>
-//                         </Select>
-//                     </Form.Item>
-//                 </Form.Item>
-
-
-
-//                 <Form.Item
-//                     name="CodeR/CodeN"
-//                     label="CodeR/CodeN"
-//                     rules={[{ required: true, message: 'Please select your favourite colors!' }]}
-//                 >
-//                     <Input placeholder="CodeR/CodeN" />
-//                 </Form.Item>
-
-//                 <Form.Item
-//                     name="รายชื่อผลิตภัณฑ์เคมี"
-//                     label="รายชื่อผลิตภัณฑ์เคมี"
-//                     rules={[{ required: true, message: 'Please select your favourite colors!' }]}
-//                 >
-//                     <Input placeholder="รายชื่อผลิตภัณฑ์เคมี (ตาม PR)" />
-//                 </Form.Item>
-//                 {/* <Form.Item wrapperCol={{ span: 12, offset: 6 }}>
-//                     <Button type="primary" htmlType="submit" onClick={()=>}>
-//                         Submit
-//                     </Button>
-//                 </Form.Item> */}
-//             </Form>
-//         </>
-//     )
-// };
 
 export default Fristpage;

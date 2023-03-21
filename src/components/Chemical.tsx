@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Divider, Steps } from 'antd';
+// import { Divider, Steps } from 'antd';
 import Login from '../login'
 import Fristpage from './Pagesteps/Firstpage';
 const App: React.FC = () => {

@@ -91,30 +91,6 @@ function getItem(
   } as MenuItem;
 }
 
-
-
-
-
-
-
-// function Indexpage() {
-//   // let data: string = sessionStorage.getItem("data") || '{}';
-//   // let session = JSON.parse(data);
-//   // console.log(data)
-//   return (
-//     <div>
-//       <div style={{ display: "flex", flexDirection: "row" }}>
-//         {sessionStorage.getItem("data")? (
-//           <>
-//             <App />
-//             <Contents />
-//           </>
-//         ) : ('')}
-//       </div>
-//     </div>
-//   )
-// }
-
 function App() {
   const [collapsed, setCollapsed] = useState(false);
   const {
