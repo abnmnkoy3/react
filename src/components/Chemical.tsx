@@ -13,17 +13,7 @@ const App: React.FC = () => {
 
   return (
     <>
-      <Steps
-        current={current}
-        onChange={onChange}
-        direction="vertical"
-        items={[
-          {
-            // title: 'Step 1',
-            description:<Fristpage/>,
-          },
-        ]}
-      />
+      <Fristpage />
     </>
   );
 };

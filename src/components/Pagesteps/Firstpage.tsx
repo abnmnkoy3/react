@@ -24,8 +24,8 @@ import type { SizeType } from 'antd/es/config-provider/SizeContext';
 const { Option } = Select;
 
 const formItemLayout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 14 },
+    labelCol: { span: 12 },
+    wrapperCol: { span: 12 },
 };
 
 const normFile = (e: any) => {
@@ -37,14 +37,13 @@ const normFile = (e: any) => {
 };
 
 const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
+    console.log(values);
 };
-
 
 function Fristpage() {
     const [form] = Form.useForm();
     type SizeType = Parameters<typeof Form>[0]['size'];
-    const [componentSize, setComponentSize] = useState<SizeType | 'small'>('small');
+    const [componentSize, setComponentSize] = useState<SizeType | 'default'>('default');
     const onFormLayoutChange = ({ size }: { size: SizeType }) => {
         setComponentSize(size);
     };
@@ -55,45 +54,39 @@ function Fristpage() {
     return (
         <>
             <div >
-                <Card style={{ overflow: "auto", padding: "5px" }}>
+                <Card style={{ overflow: "auto", padding: "5px", background: "#f0f0f0" }}>
                     <Form style={{ flexWrap: "nowrap" }} form={form} name="horizontal_login" onFinish={onFinish}
-                        // initialValues={{ size: 'small' }}
-                        layout="inline"
+                        {...formItemLayout}
+                        layout="horizontal"
+                        labelWrap
+                        wrapperCol={{ span: 16 }}
                         size={componentSize as SizeType}
                     >
-                        <Form.Item style={{ marginRight: "-62px" }}>
-                            <br /><br />
-                            <br /><br />
-                            <Button type="primary" htmlType="submit">
-                                Submit
-                            </Button>
-                            <br /><br />
-                        </Form.Item>
                         <Form.Item
-                            name="Attached"
-                            style={{ width: '10%' }}
+                            name="SSDS"
+                            label="SSDS"
+                            labelAlign="left"
                             rules={[{ required: true, message: 'Please input your username!' }]}
                         >
-                            <label style={{ padding: "5px" }}>SSDS<a style={{ color: "red" }}> *</a></label>
-                            <Input type="text" placeholder="Attached" />
+                            <Input type="text" placeholder="SSDS" />
                         </Form.Item>
                         <Form.Item
-                            name="KEY"
-                            style={{ width: '10%' }}
-                            rules={[{ required: true, message: 'KEY' }]}
+                            name="ID"
+                            label="ID"
+                            labelAlign="left"
+                            rules={[{ required: true, message: 'ID' }]}
                         >
-                            <label style={{ padding: "5px" }}>ID<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
-                                placeholder="KEY"
+                                placeholder="ID"
                             />
                         </Form.Item>
                         <Form.Item
                             name="Division"
-                            style={{ width: '17%' }}
+                            label="แผนก"
+                            labelAlign="left"
                             rules={[{ required: true, message: 'แผนกที่ใช้งาน' }]}
                         >
-                            <label style={{ padding: "5px" }}>แผนก<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="Please select a country">
                                 <Option value="PD1">PD 1</Option>
                                 <Option value="DP2">PD 2</Option>
@@ -106,76 +99,76 @@ function Fristpage() {
                         </Form.Item>
                         <Form.Item
                             name="CodeRCodeN"
-                            style={{ width: '15%' }}
+                            label="CodeR/CodeN"
+                            labelAlign="left"
                             rules={[{ required: true, message: 'CodeR/CodeN' }]}
                         >
-                            <label style={{ padding: "5px" }}>CodeR/CodeN<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="CodeR/CodeN"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel1"
-                            style={{ width: '17%' }}
+                            name="list_chemical_products"
+                            labelAlign="left"
+                            label="รายชื่อผลิตภัณฑ์เคมี"
                             rules={[{ required: true, message: 'รายชื่อผลิตภัณฑ์เคมี' }]}
                         >
-                            <label style={{ padding: "5px" }}>รายชื่อผลิตภัณฑ์เคมี<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="รายชื่อผลิตภัณฑ์เคมี (ตาม PR)"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel2"
-                            style={{ width: '19%' }}
+                            name="chemical_name"
+                            labelAlign="left"
+                            label="ชื่อสารเคมีอันตราย / ชื่อทางการค้า"
                             rules={[{ required: true, message: 'ชื่อสารเคมีอันตราย/ชื่อทางการค้า' }]}
                         >
-                            <label style={{ padding: "5px" }}>ชื่อสารเคมีอันตราย / ชื่อทางการค้า<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ชื่อสารเคมีอันตราย / ชื่อทางการค้า"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="CASNo"
-                            style={{ width: '10%' }}
+                            name="CAS_No"
+                            labelAlign="left"
+                            label="CAS No."
                             rules={[{ required: true, message: 'CAS No.' }]}
                         >
-                            <label style={{ padding: "5px" }}>CAS No.<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="CAS No."
                             />
                         </Form.Item>
                         <Form.Item
-                            name="UN"
-                            style={{ width: '10%' }}
+                            name="UN_No"
+                            labelAlign="left"
+                            label="UN No."
                             rules={[{ required: true, message: 'UN' }]}
                         >
-                            <label style={{ padding: "5px" }}>UN No.<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="UN No."
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel3"
-                            style={{ width: '15%' }}
+                            name="purpose_use"
+                            labelAlign="left"
+                            label="วัตถุประสงค์การใช้งาน"
                             rules={[{ required: true, message: 'วัตถุประสงค์การใช้งาน' }]}
                         >
-                            <label style={{ padding: "5px" }}>วัตถุประสงค์การใช้งาน<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="วัตถุประสงค์การใช้งาน"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel4"
-                            style={{ width: '10%' }}
+                            name="Substance"
+                            labelAlign="left"
+                            label="สถานะสาร"
                             rules={[{ required: true, message: 'สถานะสาร' }]}
                         >
-                            <label style={{ padding: "5px" }}>สถานะสาร<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">ของแข็ง</Option>
                                 <Option value="2">ของเหลว</Option>
@@ -183,44 +176,44 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel5"
-                            style={{ width: '15%' }}
+                            name="characteristics"
+                            labelAlign="left"
+                            label="ลักษณะสาร"
                             rules={[{ required: true, message: 'ลักษณะสาร' }]}
                         >
-                            <label style={{ padding: "5px" }}>ลักษณะสาร<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ลักษณะสาร"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel6"
-                            style={{ width: '15%' }}
+                            name="concentration"
+                            labelAlign="left"
+                            label="ความเข้มข้น (%/W/W)"
                             rules={[{ required: true, message: 'ความเข้มข้น (%/W/W)' }]}
                         >
-                            <label style={{ padding: "5px" }}>ความเข้มข้น (%/W/W)<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ความเข้มข้น (%/W/W)"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel7"
-                            style={{ width: '15%' }}
+                            name="density"
+                            labelAlign="left"
+                            label="ความหนาแน่น ( g/cm3)"
                             rules={[{ required: true, message: 'ความหนาแน่น ( g/cm3) ' }]}
                         >
-                            <label style={{ padding: "5px" }}>ความหนาแน่น ( g/cm3) <a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ความหนาแน่น ( g/cm3) "
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel8"
-                            style={{ width: '20%' }}
+                            name="control"
+                            labelAlign="left"
+                            label="การควบคุม (ระบุชนิดวัตถุอันตราย)"
                             rules={[{ required: true, message: 'การควบคุม (ระบุชนิดวัตถุอันตราย)' }]}
                         >
-                            <label style={{ padding: "5px" }}>การควบคุม (ระบุชนิดวัตถุอันตราย)<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">วัตถุอันตรายชนิดที่ 1</Option>
                                 <Option value="2">วัตถุอันตรายชนิดที่ 2</Option>
@@ -229,22 +222,22 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel9"
-                            style={{ width: '12%' }}
+                            name="component"
+                            labelAlign="left"
+                            label="องค์ประกอบ"
                             rules={[{ required: true, message: 'องค์ประกอบ' }]}
                         >
-                            <label style={{ padding: "5px" }}>องค์ประกอบ<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="องค์ประกอบ"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel10"
-                            style={{ width: '22%' }}
+                            name="UN_Class"
+                            labelAlign="left"
+                            label="การจำแนกความเป็นอันตราย : UN  Class"
                             rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : UN  Class' }]}
                         >
-                            <label style={{ padding: "5px" }}>การจำแนกความเป็นอันตราย : UN  Class<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">ประเภท 1 - ระเบิดได้ (Explosives)</Option>
                                 <Option value="2">ประเภทที่ 2 ก๊าซ (Gases)</Option>
@@ -258,11 +251,11 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel11"
-                            style={{ width: '25%' }}
+                            name="GHS_physical"
+                            labelAlign="left"
+                            label="การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ"
                             rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ' }]}
                         >
-                            <label style={{ padding: "5px" }}>การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">1. วัตถุระเบิด (Explosives)</Option>
                                 <Option value="2">2. แก๊สไวไฟ (Flammable gases)</Option>
@@ -283,11 +276,11 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel12"
-                            style={{ width: '25%' }}
-                            rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ' }]}
+                            name="GHS_health"
+                            labelAlign="left"
+                            label="การจำแนกความเป็นอันตราย : GHS  ด้านสุขภาพ"
+                            rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านสุขภาพ' }]}
                         >
-                            <label style={{ padding: "5px" }}>การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">1. ความเป็นพิษเฉียบพลัน(Acute toxicity)</Option>
                                 <Option value="2">2. การกัดกร่อน/ระคายเคืองผิวหนัง(Skin corrosion/irritation)</Option>
@@ -302,22 +295,22 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel13"
-                            style={{ width: '27%' }}
+                            name="GHS_environmental"
+                            labelAlign="left"
+                            label="การจำแนกความเป็นอันตราย : GHS  ด้านสิ่งแวดล้อม"
                             rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านสิ่งแวดล้อม' }]}
                         >
-                            <label style={{ padding: "5px" }}>การจำแนกความเป็นอันตราย : GHS  ด้านสิ่งแวดล้อม<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">1. ความเป็นอันตรายต่อสิ่งแวดล้อมทางน้ำ(Hazardous to the aquatic environment)</Option>
                                 <Option value="2">2. ความเป็นอันตรายต่อชั้นโอโซน(Hazardous to the ozone layer)</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel14"
-                            style={{ width: '27%' }}
+                            name="storage_type"
+                            labelAlign="left"
+                            label="การจำแนกความเป็นอันตราย : ประเภทการจัดเก็บ"
                             rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : ประเภทการจัดเก็บ' }]}
                         >
-                            <label style={{ padding: "5px" }}>การจำแนกความเป็นอันตราย : ประเภทการจัดเก็บ<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">1 วัตถุระเบิด</Option>
                                 <Option value="2">2A ก๊าซอัด ก๊าซเหลว หรือก๊าซที่ละลายภายใต้ความดัน</Option>
@@ -344,55 +337,55 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel15"
-                            style={{ width: '15%' }}
+                            name="total_year"
+                            labelAlign="left"
+                            label="ปริมาณการใช้รวมต่อปี"
                             rules={[{ required: true, message: 'ปริมาณการใช้รวมต่อปี' }]}
                         >
-                            <label style={{ padding: "5px" }}>ปริมาณการใช้รวมต่อปี<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ปริมาณการใช้รวมต่อปี"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel16"
-                            style={{ width: '9%' }}
+                            name="unit_1"
+                            labelAlign="left"
+                            label="หน่วย"
                             rules={[{ required: true, message: 'หน่วย' }]}
                         >
-                            <label style={{ padding: "5px" }}>หน่วย<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">กิโลกรัม</Option>
                                 <Option value="2">ลิตร</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel17"
-                            style={{ width: '15%' }}
+                            name="maximum_storage"
+                            labelAlign="left"
+                            label="ปริมาณการจัดเก็บสูงสุด"
                             rules={[{ required: true, message: 'ปริมาณการจัดเก็บสูงสุด' }]}
                         >
-                            <label style={{ padding: "5px" }}>ปริมาณการจัดเก็บสูงสุด<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ปริมาณการจัดเก็บสูงสุด"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel18"
-                            style={{ width: '9%' }}
+                            name="unit_2"
+                            labelAlign="left"
+                            label="หน่วย"
                             rules={[{ required: true, message: 'หน่วย' }]}
                         >
-                            <label style={{ padding: "5px" }}>หน่วย<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">กิโลกรัม</Option>
                                 <Option value="2">ลิตร</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel19"
-                            style={{ width: '15%' }}
+                            name="container_type"
+                            labelAlign="left"
+                            label="ลักษณะภาชนะบรรจุ : ชนิด"
                             rules={[{ required: true, message: 'ลักษณะภาชนะบรรจุ : ชนิด' }]}
                         >
-                            <label style={{ padding: "5px" }}>ลักษณะภาชนะบรรจุ : ชนิด<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">กระป๋อง</Option>
                                 <Option value="2">ถังเหล็ก</Option>
@@ -406,33 +399,33 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel20"
-                            style={{ width: '16%' }}
+                            name="container_capacity"
+                            labelAlign="left"
+                            label="ลักษณะภาชนะบรรจุ : ความจุ"
                             rules={[{ required: true, message: 'ลักษณะภาชนะบรรจุ : ความจุ' }]}
                         >
-                            <label style={{ padding: "5px" }}>ลักษณะภาชนะบรรจุ : ความจุ<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ลักษณะภาชนะบรรจุ : ความจุ"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel21"
-                            style={{ width: '16%' }}
+                            name="container_quantity"
+                            labelAlign="left"
+                            label="ลักษณะภาชนะบรรจุ : จำนวน"
                             rules={[{ required: true, message: 'ลักษณะภาชนะบรรจุ : จำนวน' }]}
                         >
-                            <label style={{ padding: "5px" }}>ลักษณะภาชนะบรรจุ : จำนวน<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ลักษณะภาชนะบรรจุ : จำนวน"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel22"
-                            style={{ width: '13%' }}
+                            name="extinguishing"
+                            labelAlign="left"
+                            label="สารที่ใช้ดับเพลิง"
                             rules={[{ required: true, message: 'สารที่ใช้ดับเพลิง' }]}
                         >
-                            <label style={{ padding: "5px" }}>สารที่ใช้ดับเพลิง<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">ผงเคมีแห้ง (Dry Chemical)</Option>
                                 <Option value="2">น้ำยาเหลวระเหย</Option>
@@ -442,248 +435,253 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel23"
-                            style={{ width: '10%' }}
+                            name="storage_location"
+                            labelAlign="left"
+                            label="สถานที่จัดเก็บ"
                             rules={[{ required: true, message: 'สถานที่จัดเก็บ' }]}
                         >
-                            <label style={{ padding: "5px" }}>สถานที่จัดเก็บ<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="สถานที่จัดเก็บ"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel24"
-                            style={{ width: '10%' }}
+                            name="area_of_​​use"
+                            labelAlign="left"
+                            label="พื้นที่ใช้งาน"
                             rules={[{ required: true, message: 'พื้นที่ใช้งาน' }]}
                         >
-                            <label style={{ padding: "5px" }}>พื้นที่ใช้งาน<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="พื้นที่ใช้งาน"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel25"
-                            style={{ width: '13%' }}
+                            name="ordered_month"
+                            labelAlign="left"
+                            label="ปริมาณที่สั่งซื้อ/เดือน"
                             rules={[{ required: true, message: 'ปริมาณที่สั่งซื้อ/เดือน' }]}
                         >
-                            <label style={{ padding: "5px" }}>ปริมาณที่สั่งซื้อ/เดือน<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ปริมาณที่สั่งซื้อ/เดือน"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel26"
-                            style={{ width: '25%' }}
+                            name="according_the_list_1"
+                            labelAlign="left"
+                            label="ลำดับที่ตามตารางบัญชีรายชื่อสารเคมีอันตราย/1"
                             rules={[{ required: true, message: 'ลำดับที่ตามตารางบัญชีรายชื่อสารเคมีอันตราย/1' }]}
                         >
-                            <label style={{ padding: "5px" }}>ลำดับที่ตามตารางบัญชีรายชื่อสารเคมีอันตราย/1<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ลำดับที่ตามตารางบัญชีรายชื่อสารเคมีอันตราย/1"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel27"
-                            style={{ width: '39%' }}
+                            name="according_the_list_2"
+                            labelAlign="left"
+                            label="ลำดับที่ตามบัญชีรายชื่อวัตถุอันตรายแนบท้ายประกาศกระทรวงอุตสาหกรรม/2"
                             rules={[{ required: true, message: 'ลำดับที่ตามบัญชีรายชื่อวัตถุอันตรายแนบท้ายประกาศกระทรวงอุตสาหกรรม/2' }]}
                         >
-                            <label style={{ padding: "5px" }}>ลำดับที่ตามบัญชีรายชื่อวัตถุอันตรายแนบท้ายประกาศกระทรวงอุตสาหกรรม/2<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ลำดับที่ตามบัญชีรายชื่อวัตถุอันตรายแนบท้ายประกาศกระทรวงอุตสาหกรรม/2"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel28"
-                            style={{ width: '12%' }}
+                            name="delivery_status"
+                            labelAlign="left"
+                            label="สถานะการส่ง สอ.1"
                             rules={[{ required: true, message: 'สถานะการส่ง สอ.1' }]}
                         >
-                            <label style={{ padding: "5px" }}>สถานะการส่ง สอ.1<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
                                 <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel29"
-                            style={{ width: '12%' }}
+                            name="delivery_date"
+                            labelAlign="left"
+                            label="วันที่ส่ง สอ.1"
                             rules={[{ required: true, message: 'วันที่ส่ง สอ.1' }]}
                         >
-                            <label style={{ padding: "5px" }}>วันที่ส่ง สอ.1<a style={{ color: "red" }}> *</a></label>
-                            <DatePicker/>
+                            <DatePicker style={{ width: '100%' }} />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel30"
-                            style={{ width: '23%' }}
+                            name="order_report"
+                            labelAlign="left"
+                            label="ลำดับที่ยื่นส่งรายงาน สอ.1 ตาม FM-SH-72"
                             rules={[{ required: true, message: 'ลำดับที่ยื่นส่งรายงาน สอ.1 ตาม FM-SH-72' }]}
                         >
-                            <label style={{ padding: "5px" }}>ลำดับที่ยื่นส่งรายงาน สอ.1 ตาม FM-SH-72<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ลำดับที่ยื่นส่งรายงาน สอ.1 ตาม FM-SH-72"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel31"
-                            style={{ width: '32%' }}
+                            name="order_announcement"
+                            labelAlign="left"
+                            label="ลำดับที่ตามประกาศ ฯ เรื่อง การให้แจ้งข้อเท็จจริง (วอ./อก.7)/3"
                             rules={[{ required: true, message: 'ลำดับที่ตามประกาศ ฯ เรื่อง การให้แจ้งข้อเท็จจริง (วอ./อก.7)/3' }]}
                         >
-                            <label style={{ padding: "5px" }}>ลำดับที่ตามประกาศ ฯ เรื่อง การให้แจ้งข้อเท็จจริง (วอ./อก.7)/3<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="ลำดับที่ตามประกาศ ฯ เรื่อง การให้แจ้งข้อเท็จจริง (วอ./อก.7)/3"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel32"
-                            style={{ width: '17%' }}
+                            name="Hazardous_chemicals"
+                            labelAlign="left"
+                            label="สารเคมีอันตรายที่ต้องตรวจวัด"
                             rules={[{ required: true, message: 'สารเคมีอันตรายที่ต้องตรวจวัด ' }]}
                         >
-                            <label style={{ padding: "5px" }}>สารเคมีอันตรายที่ต้องตรวจวัด <a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
-                                placeholder="สารเคมีอันตรายที่ต้องตรวจวัด "
+                                placeholder="สารเคมีอันตรายที่ต้องตรวจวัด"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel32"
-                            style={{ width: '11%' }}
+                            name="Measurement_record"
+                            labelAlign="left"
+                            label="บันทึกการตรวจวัด"
                             rules={[{ required: true, message: 'บันทึกการตรวจวัด' }]}
                         >
-                            <label style={{ padding: "5px" }}>บันทึกการตรวจวัด<a style={{ color: "red" }}> *</a></label>
-                            <DatePicker/>
+                            <DatePicker style={{ width: '100%' }} />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel33"
-                            style={{ width: '32%' }}
+                            name="select_6_2"
+                            labelAlign="left"
+                            label="6.2ประกาศ เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นำเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครอง ซึ่งวัตถุอันตรายที่กรมฯ พ.ศ. 2547"
                             rules={[{ required: true, message: '6.2ประกาศ เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นำเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครอง ซึ่งวัตถุอันตรายที่กรมฯ พ.ศ. 2547' }]}
                         >
-                            <label style={{ padding: "5px" }}>6.2ประกาศ เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นำเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครอง ซึ่งวัตถุอันตรายที่กรมฯ พ.ศ. 2547<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
-                                <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
-                                <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
+                                <Option value="1">สอดคล้อง</Option>
+                                <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel34"
-                            style={{ width: '32%' }}
+                            name="select_6_21"
+                            labelAlign="left"
+                            label="6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555"
                             rules={[{ required: true, message: '6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555' }]}
                         >
-                            <label style={{ padding: "5px" }}>6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
-                                <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
-                                <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
+                                <Option value="1">สอดคล้อง</Option>
+                                <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel34"
-                            style={{ width: '32%' }}
+                            name="select_6_23"
+                            labelAlign="left"
+                            label="6.23 ประกาศกระทรวงอุตสาหกรรม เรื่องบัญชีรายชื่อวัตถุอันตราย พ.ศ. 2556"
                             rules={[{ required: true, message: '6.23 ประกาศกระทรวงอุตสาหกรรม เรื่องบัญชีรายชื่อวัตถุอันตราย พ.ศ. 2556' }]}
                         >
-                            <label style={{ padding: "5px" }}>6.23 ประกาศกระทรวงอุตสาหกรรม เรื่องบัญชีรายชื่อวัตถุอันตราย พ.ศ. 2556<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
-                                <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
-                                <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
+                                <Option value="1">สอดคล้อง</Option>
+                                <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel34"
-                            style={{ width: '32%' }}
+                            name="select_6_32"
+                            labelAlign="left"
+                            label="6.32 ประกาศกระทรวงอุตสาหกรรม เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นาเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครองซึ่งวัตถุอันตรายที่กรมโรงงานอุตสาหกรรมมีอานาจหน้าที่รับผิดชอบ (ฉบับที่ 2) พ.ศ. 2563"
                             rules={[{ required: true, message: '6.32 ประกาศกระทรวงอุตสาหกรรม เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นาเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครองซึ่งวัตถุอันตรายที่กรมโรงงานอุตสาหกรรมมีอานาจหน้าที่รับผิดชอบ (ฉบับที่ 2) พ.ศ. 2563' }]}
                         >
-                            <label style={{ padding: "5px" }}>6.32 ประกาศกระทรวงอุตสาหกรรม เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นาเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครองซึ่งวัตถุอันตรายที่กรมโรงงานอุตสาหกรรมมีอานาจหน้าที่รับผิดชอบ (ฉบับที่ 2) พ.ศ. 2563<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
-                                <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
-                                <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
+                                <Option value="1">สอดคล้อง</Option>
+                                <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel35"
-                            style={{ width: '32%' }}
+                            name="select_9_20"
+                            labelAlign="left"
+                            label="9.20 กฎกระทรวงกำหนดมาตรฐานในการบริหารจัดการ และ ดำเนินการด้านความปลอดภัยอาชีวอนามัย และ สภาพแวดล้อมในการทำงานเกี่ยวกับสารเคมีอันตราย พ.ศ. 2556"
                             rules={[{ required: true, message: '9.20 กฎกระทรวงกำหนดมาตรฐานในการบริหารจัดการ และ ดำเนินการด้านความปลอดภัยอาชีวอนามัย และ สภาพแวดล้อมในการทำงานเกี่ยวกับสารเคมีอันตราย พ.ศ. 2556' }]}
                         >
-                            <label style={{ padding: "5px" }}>9.20 กฎกระทรวงกำหนดมาตรฐานในการบริหารจัดการ และ ดำเนินการด้านความปลอดภัยอาชีวอนามัย และ สภาพแวดล้อมในการทำงานเกี่ยวกับสารเคมีอันตราย พ.ศ. 2556<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
-                                <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
-                                <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
+                                <Option value="1">สอดคล้อง</Option>
+                                <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel36"
-                            style={{ width: '32%' }}
+                            name="select_9_22"
+                            labelAlign="left"
+                            label="9.22 เรื่อง แบบบัญชีรายชื่อสารเคมีอันตรายและรายละเอียดข้อมูลความปลอดภัยของสารเคมีอันตราย สอ.1 2556"
                             rules={[{ required: true, message: '9.22 เรื่อง แบบบัญชีรายชื่อสารเคมีอันตรายและรายละเอียดข้อมูลความปลอดภัยของสารเคมีอันตราย สอ.1 2556' }]}
                         >
-                            <label style={{ padding: "5px" }}>9.22 เรื่อง แบบบัญชีรายชื่อสารเคมีอันตรายและรายละเอียดข้อมูลความปลอดภัยของสารเคมีอันตราย สอ.1 2556<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
-                                <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
-                                <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
+                                <Option value="1">สอดคล้อง</Option>
+                                <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel37"
-                            style={{ width: '32%' }}
+                            name="select_9_41"
+                            labelAlign="left"
+                            label="9.41 ประกาศกระทรวงอุตสาหกรรมเรื่อง มาตรการความปลอดภัยเกี่ยวกับการจัดการสารเคมีในโรงงานอุตสาหกรรมพ.ศ. 2565"
                             rules={[{ required: true, message: '9.41 ประกาศกระทรวงอุตสาหกรรมเรื่อง มาตรการความปลอดภัยเกี่ยวกับการจัดการสารเคมีในโรงงานอุตสาหกรรมพ.ศ. 2565' }]}
                         >
-                            <label style={{ padding: "5px" }}>9.41 ประกาศกระทรวงอุตสาหกรรมเรื่อง มาตรการความปลอดภัยเกี่ยวกับการจัดการสารเคมีในโรงงานอุตสาหกรรมพ.ศ. 2565<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --">
                                 <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
                                 <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel38"
-                            style={{ width: '12%' }}
+                            name="related_laws"
+                            labelAlign="left"
+                            label="กฏหมายที่เกี่ยวข้อง"
                             rules={[{ required: true, message: 'กฏหมายที่เกี่ยวข้อง' }]}
                         >
-                            <label style={{ padding: "5px" }}>กฏหมายที่เกี่ยวข้อง<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="กฏหมายที่เกี่ยวข้อง"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel39"
-                            style={{ width: '13%' }}
+                            name="legal_compliance"
+                            labelAlign="left"
+                            label="การปฎิบัติตามกฎหมาย"
                             rules={[{ required: true, message: 'การปฎิบัติตามกฎหมาย' }]}
                         >
-                            <label style={{ padding: "5px" }}>การปฎิบัติตามกฎหมาย<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="การปฎิบัติตามกฎหมาย"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel40"
-                            style={{ width: '11%' }}
+                            name="management"
+                            labelAlign="left"
+                            label="การจัดการ/ควบคุม"
                             rules={[{ required: true, message: 'การจัดการ/ควบคุม' }]}
                         >
-                            <label style={{ padding: "5px" }}>การจัดการ/ควบคุม<a style={{ color: "red" }}> *</a></label>
                             <Input
                                 type="text"
                                 placeholder="การจัดการ/ควบคุม"
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel41"
-                            style={{ width: '23%' }}
+                            name="fm_sh_17"
+                            labelAlign="left"
+                            label="วันที่ทบทวนสารเคมี ตาม FM-SH-17 ล่าสุด"
                             rules={[{ required: true, message: 'วันที่ทบทวนสารเคมี ตาม FM-SH-17 ล่าสุด' }]}
                         >
-                            <label style={{ padding: "5px" }}>วันที่ทบทวนสารเคมี ตาม FM-SH-17 ล่าสุด<a style={{ color: "red" }}> *</a></label>
-                            <DatePicker/>
+                            <DatePicker style={{ width: '100%' }} />
                         </Form.Item>
                         <Form.Item
-                            name="Chemicel28"
-                            style={{ width: '12%', marginRight: "20px" }}
+                            name="note"
+                            labelAlign="left"
+                            label="หมายเหตุ"
                             rules={[{ required: true, message: 'หมายเหตุ' }]}
                         >
-                            <label style={{ padding: "5px" }}>หมายเหตุ<a style={{ color: "red" }}> *</a></label>
                             <Select placeholder="-- เลือก --" style={{ marginRight: "25px" }}>
                                 <Option value="1">ยกเลิกการใช้งาน</Option>
                                 <Option value="2">ใช้งานอยู่</Option>
                             </Select>
+                        </Form.Item>
+                        <Form.Item {...formItemLayout}>
+                            <Button htmlType="submit" type="primary">
+                                บันทึก
+                            </Button>
                         </Form.Item>
                     </Form>
                 </Card>

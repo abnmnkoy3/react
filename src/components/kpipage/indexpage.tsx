@@ -160,6 +160,8 @@ function Indexpage() {
                         setLoading(false);
                     }
                 }
+            }, (error) => {
+                setLoading(false);
             });
 
     };

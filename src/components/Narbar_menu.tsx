@@ -70,8 +70,8 @@ import Loginsuccess from './loginsuccess';
 import Page from './loginsuccess'
 import Chemical from './Chemical';
 import { Session } from 'inspector';
-import Indexpage from './KPIPage/indexpage';
-import Home from './KPIPage/home';
+import Indexpage from './kpipage/indexpage';
+import Home from './kpipage/home';
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -130,7 +130,7 @@ function App() {
     // getItem('Login', '/Login', <PieChartOutlined />),
     getItem('KPI', '/Indexpage', <DesktopOutlined />),
     getItem('HOME', '/Loginsuccess', <DesktopOutlined />),
-    getItem('INDEX', '/KPI', <DesktopOutlined />),
+    // getItem('INDEX', '/KPI', <DesktopOutlined />),
     getItem('Chemical', '/Chemical', <FileOutlined />),
     getItem('Signout', '/signout', <FileOutlined />),
   ];
@@ -151,7 +151,7 @@ function App() {
         <Layout style={{ minHeight: "100vh", display: "flex"}}>
           {session.logged_in == "TRUE" ? (
             <Sider collapsible theme={'dark'} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-              <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }} >2023</div>
+              <div style={{ height: 32, margin: 16,textAlign:"center",color:"#ffffff", background: 'rgba(255, 255, 255, 0.2)' }} >2023</div>
               <Menu
                 onClick={onClick}
                 openKeys={['/Login']}
@@ -180,7 +180,7 @@ function Contents() {
       <Route path="/Login" element={<Login />}></Route>
       <Route path="/Indexpage" element={<Indexpage />}></Route>
       <Route path="/Loginsuccess" element={<Loginsuccess />}></Route>
-      <Route path="/KPI" element={<Home />}></Route>
+      {/* <Route path="/KPI" element={<Home />}></Route> */}
       <Route path="/Chemical" element={<Chemical />}></Route>
       <Route path="/signout" element={<Login />}></Route>
     </Routes>
