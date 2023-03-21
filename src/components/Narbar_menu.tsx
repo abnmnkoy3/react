@@ -72,6 +72,7 @@ import Chemical from './Chemical';
 import { Session } from 'inspector';
 import Indexpage from './kpipage/indexpage';
 import Home from './kpipage/home';
+import Indexchemical from './Pagesteps/indexchemical';
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -131,6 +132,7 @@ function App() {
     getItem('KPI', '/Indexpage', <DesktopOutlined />),
     getItem('HOME', '/Loginsuccess', <DesktopOutlined />),
     // getItem('INDEX', '/KPI', <DesktopOutlined />),
+    getItem('INDEX Chemical', '/Show_Chemical', <FileOutlined />),
     getItem('Chemical', '/Chemical', <FileOutlined />),
     getItem('Signout', '/signout', <FileOutlined />),
   ];
@@ -148,10 +150,10 @@ function App() {
   return (
     <>
       <div style={{ overflow: "auto", flexWrap: "nowrap" }}>
-        <Layout style={{ minHeight: "100vh", display: "flex"}}>
+        <Layout style={{ minHeight: "100vh", display: "flex" }}>
           {session.logged_in == "TRUE" ? (
             <Sider collapsible theme={'dark'} collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
-              <div style={{ height: 32, margin: 16,textAlign:"center",color:"#ffffff", background: 'rgba(255, 255, 255, 0.2)' }} >2023</div>
+              <div style={{ height: 32, margin: 16, textAlign: "center", color: "#ffffff", background: 'rgba(255, 255, 255, 0.2)' }} >2023</div>
               <Menu
                 onClick={onClick}
                 openKeys={['/Login']}
@@ -162,7 +164,7 @@ function App() {
               />
             </Sider>
           ) : ('')}
-          <Layout className="site-layout" style={{background:"#adc6ff"}} >
+          <Layout className="site-layout" style={{ background: "#adc6ff" }} >
             <Content style={{ margin: '0', padding: "20px" }}>
               <Contents />
             </Content>
@@ -174,17 +176,18 @@ function App() {
 };
 function Contents() {
   return (
-  <div>
-    <Routes>
-      <Route path="/" element={<Page />}></Route>
-      <Route path="/Login" element={<Login />}></Route>
-      <Route path="/Indexpage" element={<Indexpage />}></Route>
-      <Route path="/Loginsuccess" element={<Loginsuccess />}></Route>
-      {/* <Route path="/KPI" element={<Home />}></Route> */}
-      <Route path="/Chemical" element={<Chemical />}></Route>
-      <Route path="/signout" element={<Login />}></Route>
-    </Routes>
-  </div>
+    <div>
+      <Routes>
+        <Route path="/" element={<Page />}></Route>
+        <Route path="/Login" element={<Login />}></Route>
+        <Route path="/Indexpage" element={<Indexpage />}></Route>
+        <Route path="/Loginsuccess" element={<Loginsuccess />}></Route>
+        {/* <Route path="/KPI" element={<Home />}></Route> */}
+        <Route path="/Show_Chemical" element={<Indexchemical />}></Route>
+        <Route path="/Chemical" element={<Chemical />}></Route>
+        <Route path="/signout" element={<Login />}></Route>
+      </Routes>
+    </div>
   );
 }
 

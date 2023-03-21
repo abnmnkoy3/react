@@ -47,9 +47,76 @@ function Fristpage() {
     const onFormLayoutChange = ({ size }: { size: SizeType }) => {
         setComponentSize(size);
     };
-
+    const [data_ind, setData_ind] = useState<DataType[]>();
+    interface DataType {
+        // id: React.Key;
+        ssds: any;
+        id_ssds: any;
+        divsion: any;
+        coden_coder: any;
+        list_chemical_products: any;
+        chemical_name: any;
+        cas_no: any;
+        un_no: any;
+        purpose_use: any;
+        substance: any;
+        characteristics: any;
+        concentration: any;
+        density: any;
+        control: any;
+        component: any;
+        un_class: any;
+        ghs_physical: any;
+        ghs_health: any;
+        ghs_environmental: any;
+        storage_type: any;
+        total_year: any;
+        unit_1: any;
+        maximum_storage: any;
+        unit_2: any;
+        container_type: any;
+        container_capacity: any;
+        container_quantity: any;
+        extinguishing: any;
+        storage_location: any;
+        area_of_use: any;
+        ordered_month: any;
+        according_the_list_1: any;
+        according_the_list_2: any;
+        delivery_status: any;
+        delivery_date: any;
+        order_report: any;
+        order_announcement: any;
+        hazardous_chemicals: any;
+        measurement_record: any;
+        select_6_2: any;
+        select_6_21: any;
+        select_6_23: any;
+        select_6_32: any;
+        select_9_20: any;
+        select_9_22: any;
+        select_9_41: any;
+        related_laws: any;
+        legal_compliance: any;
+        management: any;
+        fm_sh_17: any;
+        note: any;
+    }
     const onFinish = (values: any) => {
-        console.log('Finish:', values);
+        setData_ind(values)
+        let json_to_string = JSON.stringify(data_ind);
+        console.log(json_to_string)
+        const fd = new FormData();
+        fd.append('data_local', json_to_string);
+
+        fetch(`https://kpi.vandapac.com/insert_test_check`, {
+            method: 'POST',
+            body: fd
+        })
+            .then(data => data.json())
+            .then(data => {
+                console.log('ok')
+            });
     };
     return (
         <>
@@ -63,7 +130,7 @@ function Fristpage() {
                         size={componentSize as SizeType}
                     >
                         <Form.Item
-                            name="SSDS"
+                            name="ssds"
                             label="SSDS"
                             labelAlign="left"
                             rules={[{ required: true, message: 'Please input your username!' }]}
@@ -71,7 +138,7 @@ function Fristpage() {
                             <Input type="text" placeholder="SSDS" />
                         </Form.Item>
                         <Form.Item
-                            name="ID"
+                            name="id_ssds"
                             label="ID"
                             labelAlign="left"
                             rules={[{ required: true, message: 'ID' }]}
@@ -82,7 +149,7 @@ function Fristpage() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Division"
+                            name="division"
                             label="แผนก"
                             labelAlign="left"
                             rules={[{ required: true, message: 'แผนกที่ใช้งาน' }]}
@@ -98,7 +165,7 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="CodeRCodeN"
+                            name="coden_coder"
                             label="CodeR/CodeN"
                             labelAlign="left"
                             rules={[{ required: true, message: 'CodeR/CodeN' }]}
@@ -131,7 +198,7 @@ function Fristpage() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name="CAS_No"
+                            name="cas_no"
                             labelAlign="left"
                             label="CAS No."
                             rules={[{ required: true, message: 'CAS No.' }]}
@@ -142,7 +209,7 @@ function Fristpage() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name="UN_No"
+                            name="un_no"
                             labelAlign="left"
                             label="UN No."
                             rules={[{ required: true, message: 'UN' }]}
@@ -164,7 +231,7 @@ function Fristpage() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Substance"
+                            name="substance"
                             labelAlign="left"
                             label="สถานะสาร"
                             rules={[{ required: true, message: 'สถานะสาร' }]}
@@ -233,7 +300,7 @@ function Fristpage() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name="UN_Class"
+                            name="un_class"
                             labelAlign="left"
                             label="การจำแนกความเป็นอันตราย : UN  Class"
                             rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : UN  Class' }]}
@@ -251,7 +318,7 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="GHS_physical"
+                            name="ghs_physical"
                             labelAlign="left"
                             label="การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ"
                             rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ' }]}
@@ -276,7 +343,7 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="GHS_health"
+                            name="ghs_health"
                             labelAlign="left"
                             label="การจำแนกความเป็นอันตราย : GHS  ด้านสุขภาพ"
                             rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านสุขภาพ' }]}
@@ -295,7 +362,7 @@ function Fristpage() {
                             </Select>
                         </Form.Item>
                         <Form.Item
-                            name="GHS_environmental"
+                            name="ghs_environmental"
                             labelAlign="left"
                             label="การจำแนกความเป็นอันตราย : GHS  ด้านสิ่งแวดล้อม"
                             rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านสิ่งแวดล้อม' }]}
@@ -446,7 +513,7 @@ function Fristpage() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name="area_of_​​use"
+                            name="area_of_use"
                             labelAlign="left"
                             label="พื้นที่ใช้งาน"
                             rules={[{ required: true, message: 'พื้นที่ใช้งาน' }]}
@@ -531,7 +598,7 @@ function Fristpage() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Hazardous_chemicals"
+                            name="hazardous_chemicals"
                             labelAlign="left"
                             label="สารเคมีอันตรายที่ต้องตรวจวัด"
                             rules={[{ required: true, message: 'สารเคมีอันตรายที่ต้องตรวจวัด ' }]}
@@ -542,7 +609,7 @@ function Fristpage() {
                             />
                         </Form.Item>
                         <Form.Item
-                            name="Measurement_record"
+                            name="measurement_record"
                             labelAlign="left"
                             label="บันทึกการตรวจวัด"
                             rules={[{ required: true, message: 'บันทึกการตรวจวัด' }]}
