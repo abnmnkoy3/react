@@ -91,6 +91,7 @@ function Fristpage() {
         measurement_record: any;
         select_6_2: string;
         select_6_21: string;
+        select_6_22: string;
         select_6_23: string;
         select_6_32: string;
         select_9_20: string;
@@ -118,6 +119,12 @@ function Fristpage() {
                 console.log('ok')
             });
     };
+    const options = {
+        label: 'Fruit',
+        value: 'fruit'
+    };
+    // const [Data_chemical, setData_chemical] = useState<options[]>();
+
     return (
         <>
             <div >
@@ -631,6 +638,17 @@ function Fristpage() {
                             name="select_6_21"
                             labelAlign="left"
                             label="6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555"
+                            rules={[{ required: true, message: '6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555' }]}
+                        >
+                            <Select placeholder="-- เลือก --">
+                                <Option value="1">สอดคล้อง</Option>
+                                <Option value="2">ไม่สอดคล้อง</Option>
+                            </Select>
+                        </Form.Item>
+                        <Form.Item
+                            name="select_6_22"
+                            labelAlign="left"
+                            label="6.22กฎกระทรวง ฉบับที่ 4 พ.ศ.2555 (ออกตามความใน พรบ.วัตถุอัตราย 2535)"
                             rules={[{ required: true, message: '6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555' }]}
                         >
                             <Select placeholder="-- เลือก --">
