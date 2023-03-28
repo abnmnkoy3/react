@@ -102,6 +102,14 @@ const onFinishFailed = (errorInfo: any) => {
 
 // const App: React.FC = () => (
 function App() {
+    const [data, setData] = React.useState(null);
+
+    React.useEffect(() => {
+        fetch("/api")
+            .then((res) => res.json())
+            .then((data) => setData(data.message));
+    }, []);
+
     const [isLoggedIn, setisLoggedIn] = useState('')
     const navigate = useNavigate();
     const [error, seterror] = useState('')
@@ -139,7 +147,7 @@ function App() {
                 </>
             ) : (
                 <div className='AppLogin'>
-
+                    <p>{!data ? "Loading..." : data}</p>
                     <Form
                         name="basic"
                         labelCol={{ span: 8 }}
