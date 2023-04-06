@@ -3,7 +3,6 @@ import { Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState, useEffect } from 'react';
 import './chemical.scss';
-import { css } from '@emotion/react'
 function Indexchemical() {
     const [Data_chemical, setData_chemical] = useState<DataType[]>();
     const [loading, setLoading] = useState(false);
@@ -148,11 +147,8 @@ function Indexchemical() {
             .then((res) => res.json())
             .then((res) => {
                 for (let i = 0; i < res.length; i++) {
-                    // if (res[i].MTD_Objective_Type == 'Individual') {
                     setData_chemical(res);
                     setLoading(false);
-                    console.log(res)
-                    // }
                 }
             }, (error) => {
                 setLoading(false);
@@ -166,7 +162,6 @@ function Indexchemical() {
         <Table columns={columns} dataSource={Data_chemical} scroll={{ x: 1300 }} />
     );
 }
-
 
 export default Indexchemical;
 

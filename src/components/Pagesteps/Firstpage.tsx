@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useEffect, useState } from 'react';
 import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
+import axios from 'axios';
 import {
     Button,
     Checkbox,
@@ -16,10 +17,15 @@ import {
     Upload,
     Affix,
     Card,
+    ConfigProvider,
+    message,
+    notification,
 } from 'antd';
 import { DatePicker, Radio, Space } from 'antd';
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
-
+import th_TH from 'antd/locale/th_TH';
+import type { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload/interface';
+import type { UploadProps } from 'antd';
 // import '../../index.css'
 const { Option } = Select;
 
@@ -28,13 +34,6 @@ const formItemLayout = {
     wrapperCol: { span: 12 },
 };
 
-const normFile = (e: any) => {
-    console.log('Upload event:', e);
-    if (Array.isArray(e)) {
-        return e;
-    }
-    return e?.fileList;
-};
 
 const onFinish = (values: any) => {
     console.log(values);
@@ -118,12 +117,50 @@ function Fristpage() {
             .then(data => {
                 console.log('ok')
             });
+
+        /*      UPLOAD FILE         */
+        const data = new FormData()
+        data.append('file', files)
+        axios.post("http://localhost:3001/upload", data, { // receive two parameter endpoint url ,form data 
+        }).then(res => { // then print response status
+            console.log(res.statusText)
+        })
+        /*      UPLOAD FILE         */
+
+    }
+
+    /*           SELECT FILE           */
+    const [files, setFiles] = useState('');
+    const onChangeHandler = (e: any) => {
+        setFiles(e.target.files[0]);
+    }
+    /*           SELECT FILE           */
+
+    ///////////////////////////
+    const [file, setFile] = useState<File>();
+
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setFile(e.target.files[0]);
+        }
     };
-    const options = {
-        label: 'Fruit',
-        value: 'fruit'
-    };
-    // const [Data_chemical, setData_chemical] = useState<options[]>();
+
+
+    // const props: UploadProps = {
+    //     onRemove: (file) => {
+    //         const index = fileList.indexOf(file);
+    //         const newFileList = fileList.slice();
+    //         newFileList.splice(index, 1);
+    //         setFileList(newFileList);
+    //     },
+    //     beforeUpload: (file) => {
+    //         setFileList([...fileList, file]);
+
+    //         return false;
+    //     },
+    //     fileList,
+    // };
+    ///////////////////////////
 
     return (
         <>
@@ -142,8 +179,10 @@ function Fristpage() {
                             labelAlign="left"
                             rules={[{ required: true, message: 'Please input your username!' }]}
                         >
-                            <Input type="text" placeholder="SSDS" />
+                            {/* <Button icon={<UploadOutlined />}>Select File</Button> */}
+                            <Input type="file" name="file" onChange={onChangeHandler} />
                         </Form.Item>
+
                         <Form.Item
                             name="id_ssds"
                             label="ID"
@@ -771,6 +810,9 @@ function Fristpage() {
                     </Form>
                 </Card>
             </div>
+            {/* <ConfigProvider locale={th_TH}>
+                1312321
+            </ConfigProvider> */}
         </>
     )
 }
