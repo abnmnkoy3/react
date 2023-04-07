@@ -73,6 +73,7 @@ import { Session } from 'inspector';
 import Indexpage from './kpipage/indexpage';
 import Home from './kpipage/home';
 import Indexchemical from './Pagesteps/indexchemical';
+import Safety_page from './Pagesteps/safety_page';
 const { Header, Content, Footer, Sider } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -107,6 +108,7 @@ function App() {
     // getItem('Login', '/Login', <PieChartOutlined />),
     getItem('KPI', '/Indexpage', <DesktopOutlined />),
     getItem('HOME', '/Loginsuccess', <DesktopOutlined />),
+    getItem('SAFETY PAGE', '/safety_page', <DesktopOutlined />),
     // getItem('INDEX', '/KPI', <DesktopOutlined />),
     getItem('INDEX Chemical', '/Show_Chemical', <FileOutlined />),
     getItem('Chemical', '/Chemical', <FileOutlined />),
@@ -157,6 +159,7 @@ function Contents() {
         <Route path="/" element={<Page />}></Route>
         <Route path="/Login" element={<Login />}></Route>
         <Route path="/Indexpage" element={<Indexpage />}></Route>
+        <Route path="/safety_page" element={<Safety_page />}></Route>
         <Route path="/Loginsuccess" element={<Loginsuccess />}></Route>
         {/* <Route path="/KPI" element={<Home />}></Route> */}
         <Route path="/Show_Chemical" element={<Indexchemical />}></Route>

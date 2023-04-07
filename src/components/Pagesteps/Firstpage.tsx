@@ -43,6 +43,7 @@ function Fristpage() {
     const [form] = Form.useForm();
     type SizeType = Parameters<typeof Form>[0]['size'];
     const [componentSize, setComponentSize] = useState<SizeType | 'default'>('default');
+    const [valname, setvalname] = useState('');
     const onFormLayoutChange = ({ size }: { size: SizeType }) => {
         setComponentSize(size);
     };
@@ -102,12 +103,23 @@ function Fristpage() {
         fm_sh_17: any;
         note: string;
     }
+
     const onFinish = (values: any) => {
         setData_ind(values)
+
         let json_to_string = JSON.stringify(data_ind);
-        console.log(json_to_string)
+        let stringt_to_json = JSON.parse(json_to_string);
+
+        Object.entries(stringt_to_json).forEach(([key, value]) => {
+            if (key === "ssds") {
+                stringt_to_json[key] = valname;
+                console.log(stringt_to_json[key])
+            }
+        });
+        let json_to_string_api = JSON.stringify(stringt_to_json);
+
         const fd = new FormData();
-        fd.append('data_local', json_to_string);
+        fd.append('data_local', json_to_string_api);
 
         fetch(`https://kpi.vandapac.com/insert_test_check`, {
             method: 'POST',
@@ -131,36 +143,28 @@ function Fristpage() {
 
     /*           SELECT FILE           */
     const [files, setFiles] = useState('');
+    const [Substr, setSubstr] = useState('');
     const onChangeHandler = (e: any) => {
         setFiles(e.target.files[0]);
+        // console.log(e.target.files[0].name)
+        setvalname(e.target.files[0].name)
+
     }
+    useEffect(() => {
+        var index = valname.indexOf('.');
+        setSubstr(valname.substr(index))
+        console.log(Substr)
+    }, [valname])
     /*           SELECT FILE           */
 
-    ///////////////////////////
+    /*           SET FILE              */
     const [file, setFile] = useState<File>();
-
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
             setFile(e.target.files[0]);
         }
     };
-
-
-    // const props: UploadProps = {
-    //     onRemove: (file) => {
-    //         const index = fileList.indexOf(file);
-    //         const newFileList = fileList.slice();
-    //         newFileList.splice(index, 1);
-    //         setFileList(newFileList);
-    //     },
-    //     beforeUpload: (file) => {
-    //         setFileList([...fileList, file]);
-
-    //         return false;
-    //     },
-    //     fileList,
-    // };
-    ///////////////////////////
+    /*           SET FILE              */
 
     return (
         <>
@@ -179,8 +183,7 @@ function Fristpage() {
                             labelAlign="left"
                             rules={[{ required: true, message: 'Please input your username!' }]}
                         >
-                            {/* <Button icon={<UploadOutlined />}>Select File</Button> */}
-                            <Input type="file" name="file" onChange={onChangeHandler} />
+                            <Input type="file" name="file" onChange={onChangeHandler} value={valname} />
                         </Form.Item>
 
                         <Form.Item
@@ -801,6 +804,17 @@ function Fristpage() {
                                 <Option value="1">ยกเลิกการใช้งาน</Option>
                                 <Option value="2">ใช้งานอยู่</Option>
                             </Select>
+                        </Form.Item>
+                        <Form.Item
+                            hidden
+                            name="status"
+                            labelAlign="left"
+                            label="status"
+                        >
+                            <Input
+                                type="text"
+                                placeholder="การจัดการ/ควบคุม" value='1'
+                            />
                         </Form.Item>
                         <Form.Item {...formItemLayout}>
                             <Button htmlType="submit" type="primary">

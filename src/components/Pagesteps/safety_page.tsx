@@ -6,15 +6,16 @@ import './chemical.scss';
 import { Image } from 'antd';
 import { Document } from 'react-pdf';
 import { hover } from '@testing-library/user-event/dist/hover';
-function Indexchemical() {
+function Safety_page() {
     const [Data_chemical, setData_chemical] = useState<DataType[]>();
     const [visible, setVisible] = useState(false);
     const [valimg, setValimg] = useState('');
     const [Substr, setSubstr] = useState('');
     const [loading, setLoading] = useState(false);
+    const [edit_id, set_edit_id] = useState('');
 
     interface DataType {
-        // id: React.Key;
+        id: any;
         ssds: any;
         id_ssds: string;
         division: string;
@@ -68,6 +69,40 @@ function Indexchemical() {
         note: string;
         status: string;
     }
+
+    // const onFinish = (values: any) => {
+
+    //     let id_edit = values;
+    //     console.log(id_edit)
+
+    //     const fd = new FormData();
+    //     fd.append('id', id_edit);
+
+    //     fetch(`https://kpi.vandapac.com/insert_test_check`, {
+    //         method: 'POST',
+    //         body: fd
+    //     })
+    //         .then(data => data.json())
+    //         .then(data => {
+    //             console.log('ok')
+    //         });
+
+
+    // }
+
+
+
+    useEffect(() => {
+        // childToParent(state)
+        // handleOnChange(edit_id)
+        const handleOnChange = (event: { target: { value: any } }) => {
+            // set_edit_id(event.target.value);
+            console.log('adaw')
+        };
+        console.log(edit_id)
+    }, [edit_id]);
+
+
 
     const columns: ColumnsType<DataType> = [
         {
@@ -174,14 +209,13 @@ function Indexchemical() {
             key: 'status',
             fixed: 'right',
             align: 'center',
-            width: 120,
+            width: 150,
             render: (status) => {
-                // console.log(status)
                 let color;
                 let text_status;
                 if (status.status === '1') {
-                    color = '#d4b106';
-                    text_status = 'รอดำเนินการ'
+                    color = 'cyan';
+                    text_status = 'จัดการ'
                 } else if (status.status === '2') {
                     color = '#389e0d';
                     text_status = 'ขึ้นทะเบียนแล้ว'
@@ -195,8 +229,14 @@ function Indexchemical() {
                 }
                 return (
                     <Space align="center">
-                        <Tag color={color} key='operation'>
-                            {text_status}
+                        <input hidden type="text" id="test" value={status.id} />
+                        <Tag color={color} key='status' >
+                            <a onClick={() => {
+                                set_edit_id(status.id)
+                            }}>{text_status}</a>
+                        </Tag>
+                        <Tag color='red' key='operation'>
+                            <a >Reject</a>
                         </Tag>
                     </Space>
                 );
@@ -208,7 +248,7 @@ function Indexchemical() {
     const fetchData = () => {
         setLoading(true);
         const data_table: DataType[] = [];
-        fetch('https://kpi.vandapac.com/data_chemical_all', {
+        fetch('https://kpi.vandapac.com/data_chemical_pending', {
             method: 'POST',
         })
             .then((res) => res.json())
@@ -229,5 +269,5 @@ function Indexchemical() {
     );
 }
 
-export default Indexchemical;
+export default Safety_page;
 

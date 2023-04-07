@@ -140,14 +140,14 @@ function App() {
         }, 1000);
     };
     return (
-        <>
+        < >
             {isLoggedIn === "TRUE" ? (
                 <>
                     <Indexpage />
                 </>
             ) : (
-                <div className='AppLogin'>
-                    <p>{!data ? "Loading..." : data}</p>
+                <div className='AppLogin' >
+                    {/* <p>{!data ? "Loading..." : data}</p> */}
                     <Form
                         name="basic"
                         labelCol={{ span: 8 }}
