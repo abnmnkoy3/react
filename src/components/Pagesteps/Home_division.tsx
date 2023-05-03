@@ -1,11 +1,9 @@
 import React, { Children } from 'react';
-import { Space, Table, Tag } from 'antd';
+import { Alert, Button, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState, useEffect } from 'react';
 import './chemical.scss';
 import { Image } from 'antd';
-import { Document } from 'react-pdf';
-import { hover } from '@testing-library/user-event/dist/hover';
 import axios from 'axios';
 import { Navigate, useNavigate } from "react-router-dom";
 function Indexchemical() {
@@ -81,7 +79,6 @@ function Indexchemical() {
             render: (text) => {
                 var index = text.indexOf('.');
                 let check = text.substr(index) === '.jpg' || '.png' || '.jpeg' ? '1' : '';
-                // console.log(check)
                 if (text.substr(index) === '.jpg' || text.substr(index) === '.png' || text.substr(index) === '.jpeg') {
                     return (
                         <>
@@ -177,9 +174,8 @@ function Indexchemical() {
             key: 'status',
             fixed: 'right',
             align: 'center',
-            width: 150,
+            width: 211,
             render: (status) => {
-                // console.log(status)
                 let color;
                 let text_status;
                 if (status.status === '1') {
@@ -189,7 +185,7 @@ function Indexchemical() {
                     color = '#389e0d';
                     text_status = 'ขึ้นทะเบียนแล้ว'
                 } else if (status.status === '3') {
-                    color = 'red';
+                    color = '#13c2c2';
                     text_status = 'Rejected'
                 }
                 else if (status.status === '4') {
@@ -199,28 +195,82 @@ function Indexchemical() {
                 return (
                     <Space align="center">
                         {status.status == "3" ? (
-                            <Tag color={color} key='operation'>
-                                <a id={status.id} onClick={function (e) {
-                                    axios.post("http://localhost:3001/data_edit", {
-                                        id: e.currentTarget.id
-                                    }).then((res) => {
-                                        if (res) {
-                                            let session = JSON.stringify(res);
-                                            sessionStorage.setItem("edit_data", session);
-                                            sessionStorage.setItem('reject_change', 'reject');
-                                            sessionStorage.setItem('menu_edit', 'checkMenuedit');
-                                            // set_edit_id('')
-                                            navigate("/Chemical");
-                                            // <Children />
-                                        } else {
-                                            console.log('error')
-                                        }
-                                    })
-                                }}>แก้ไข</a>
-                            </Tag>
-                        ) : (<Tag color={color} key='operation'>
-                            {text_status}
-                        </Tag>)}
+                            <>
+                                <Tag color={color} >
+                                    <a id={status.id} onClick={function (e) {
+                                        axios.post("http://localhost:3001/data_edit", {
+                                            id: e.currentTarget.id
+                                        }).then((res) => {
+                                            if (res) {
+                                                let session = JSON.stringify(res);
+                                                localStorage.setItem("safety_manage", session);
+                                                sessionStorage.setItem('reject_change', 'reject');
+                                                localStorage.setItem('menu_edit', '/Chemical');
+                                                navigate("/Chemical", { state: true });
+                                            } else {
+                                                console.log('error')
+                                            }
+                                        })
+                                    }}>แก้ไข</a>
+                                </Tag>
+                                <Tag color={'#f5222d'} >
+                                    <a id={status.id} onClick={function (e) {
+                                        axios.post("http://localhost:3001/delete_chemical", {
+                                            id: e.currentTarget.id
+                                        }).then((res) => {
+                                            if (res) {
+                                                alert('ลบข้อมูลเสร็จสิ้น')
+                                                fetchData()
+                                                navigate("/Home_Division");
+                                            } else {
+                                                console.log('error')
+                                            }
+                                        })
+                                    }}>ลบ</a>
+                                </Tag>
+                            </>
+                        ) : (
+                            <>
+                                <Tag color={color} >
+                                    {text_status}
+                                </Tag>
+                                {status.status == "2" ? (
+                                    <Tag color={'#f5222d'} >
+                                        <a id={status.id} onClick={function (e) {
+                                            axios.post("http://localhost:3001/disabled_chemical", {
+                                                id: e.currentTarget.id
+                                            }).then((res) => {
+                                                if (res) {
+                                                    alert('ยกเลิกใช้งานสารเคมีเรียบร้อย')
+                                                    fetchData()
+                                                    navigate("/Home_Division");
+                                                } else {
+                                                    console.log('error')
+                                                }
+                                            })
+                                        }}>ยกเลิกใช้งาน</a>
+                                    </Tag>
+                                ) : (
+                                    <>
+                                        <Tag color={'#f5222d'} >
+                                            <a id={status.id} onClick={function (e) {
+                                                axios.post("http://localhost:3001/delete_chemical", {
+                                                    id: e.currentTarget.id
+                                                }).then((res) => {
+                                                    if (res) {
+                                                        alert('ลบข้อมูลเสร็จสิ้น')
+                                                        fetchData()
+                                                        navigate("/Home_Division");
+                                                    } else {
+                                                        console.log('error')
+                                                    }
+                                                })
+                                            }}>ลบ</a>
+                                        </Tag>
+                                    </>
+                                )}
+                            </>
+                        )}
 
                     </Space>
                 );

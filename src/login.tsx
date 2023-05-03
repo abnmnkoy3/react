@@ -1,6 +1,6 @@
 import Indexpage from "./components/Narbar_menu";
 import React from 'react';
-import { Button, Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input, Layout } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import './styles.css'
@@ -11,11 +11,50 @@ const onFinishFailed = (errorInfo: any) => {
 
 function App() {
     const [data, setData] = React.useState(null);
-
     const [isLoggedIn, setisLoggedIn] = useState('')
     const navigate = useNavigate();
     const [error, seterror] = useState('')
     const [isLoading, setisLoading] = useState('')
+
+
+
+    const headerStyle: React.CSSProperties = {
+        textAlign: 'center',
+        color: '#fff',
+        height: 64,
+        paddingInline: 50,
+        lineHeight: '64px',
+        backgroundColor: '#7dbcea',
+    };
+
+    const contentStyle: React.CSSProperties = {
+        textAlign: 'center',
+        minHeight: 120,
+        lineHeight: '120px',
+        color: '#fff',
+        backgroundColor: '#108ee9',
+    };
+
+    const siderStyle: React.CSSProperties = {
+        textAlign: 'center',
+        lineHeight: '120px',
+        color: '#fff',
+        backgroundColor: '#3ba0e9',
+    };
+
+    const footerStyle: React.CSSProperties = {
+        textAlign: 'center',
+        color: '#fff',
+        backgroundColor: '#7dbcea',
+    };
+
+
+
+
+
+
+
+
     const onFinish = (values: any) => {
         setisLoading('TRUE');
         setTimeout(() => {
@@ -46,19 +85,18 @@ function App() {
         }, 1000);
     };
     return (
-        < >
+        <>
             {isLoggedIn === "TRUE" ? (
                 <>
                     <Indexpage />
                 </>
             ) : (
-                <div className='AppLogin' >
+                <div className='AppLogin'>
                     {/* <p>{!data ? "Loading..." : data}</p> */}
                     <Form
                         name="basic"
                         labelCol={{ span: 8 }}
                         wrapperCol={{ span: 16 }}
-                        style={{ maxWidth: 800 }}
                         initialValues={{ remember: true }}
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
@@ -91,8 +129,9 @@ function App() {
                             </Button>
                         </Form.Item>
                     </Form>
-                </div>
-            )}
+                </div >
+            )
+            }
         </>
     );
 }

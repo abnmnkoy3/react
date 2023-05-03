@@ -117,7 +117,6 @@ function Fristpage() {
 
         if (string_to_json.id_check) {
             let reject_change: string = sessionStorage.getItem("reject_change") || '{}';
-            // let session_reject = JSON.parse(reject_change);
             if (reject_change !== '{}') {
                 axios.post(`http://localhost:3001/update_data_reject`, {
                     data_set: string_to_json
@@ -125,6 +124,7 @@ function Fristpage() {
                     console.log('update')
                     sessionStorage.removeItem("reject_change");
                     navigate('/Home_Division')
+                    localStorage.setItem('update_reject_ok', '/Home_Division');
                 });
             } else {
                 axios.post(`http://localhost:3001/update_data`, {
@@ -132,6 +132,8 @@ function Fristpage() {
                 }).then(data => {
                     console.log('update')
                     navigate('/safety_page')
+                    localStorage.setItem('update_ok', '/safety_page');
+
                 });
             }
 
@@ -148,6 +150,7 @@ function Fristpage() {
             }).then(data => {
                 console.log('insert')
                 navigate('/Home_Division')
+                localStorage.setItem('insert_ok', '/Home_Division');
             });
             const data = new FormData()
             data.append('file', filesname)
@@ -179,18 +182,20 @@ function Fristpage() {
         }
     };
 
-    let data_edit: string = sessionStorage.getItem("edit_data") || '{}';
+    let data_edit: string = localStorage.getItem("safety_manage") || '{}';
     let session_edit = JSON.parse(data_edit);
 
+    const [filesnameedit, setFilesnameedit] = useState('');
     useEffect(() => {
         if (data_edit != '{}') {
-
+            setvalname(session_edit.data[0].ssds)
             setcheck_update(true);
+            setFilesnameedit(session_edit.data[0].ssds)
             form.setFieldsValue({
                 id: session_edit.data[0].id,
                 id_check: session_edit.data[0].id,
                 id_ssds: session_edit.data[0].id_ssds,
-                // ssds_show: 'C:\\xampp\htdocs\\ImageSave\\document.pdf',
+                ssds_show: session_edit.data[0].ssds,
                 division: session_edit.data[0].division,
                 coden_coder: session_edit.data[0].coden_coder,
                 list_chemical_products: session_edit.data[0].list_chemical_products,
@@ -242,8 +247,9 @@ function Fristpage() {
                 fm_sh_17: moment(session_edit.data[0].fm_sh_17),
                 note: session_edit.data[0].note,
             });
-            // sessionStorage.removeItem('edit_data')
         } else {
+            setcheck_update(false);
+            setFilesnameedit('');
         }
     }, [])
     return (
@@ -255,40 +261,52 @@ function Fristpage() {
                         layout="horizontal"
                         labelWrap
                         wrapperCol={{ span: 16 }}
-                        size={componentSize as SizeType}
 
                     >
-                        <Form.Item
+                        {check_update === true ? (
+                            <Form.Item
+                                name="id_check"
+                                label="id_check"
+                                hidden
+                                labelAlign="left"
+                                rules={[{ required: false, message: 'Please input your username!' }]}
+                            >
+                                <Input type="text" placeholder="ID" />
+                            </Form.Item>
+                        ) : (<Form.Item
 
-                            name="id_check"
-                            label="id_check"
+                            name="id_checks"
+                            label="id_checks"
                             hidden
                             labelAlign="left"
                             rules={[{ required: false, message: 'Please input your username!' }]}
                         >
                             <Input type="text" placeholder="ID" />
-                        </Form.Item>
-                        {check_update == false ? (
-                            <Form.Item
-                                name="ssds"
-                                label="SSDS"
-                                labelAlign="left"
-
-                                rules={[{ required: true, message: 'Please input your username!' }]}
-                            >
-                                <Input type="file" onChange={onChangeHandler} value={valname} />
-                            </Form.Item>
-                        ) : (
+                        </Form.Item>)}
+                        {check_update === true ? (
                             <Form.Item
                                 name="ssds_show"
                                 label="SSDS"
                                 labelAlign="left"
 
-                                rules={[{ required: true, message: 'Please input your username!' }]}
+                                rules={[{ required: true, message: 'No data' }]}
                             >
-                                <u style={{ color: '#0958d9' }}><a id={session_edit.data[0].ssds} onClick={() => {
-                                    window.open(`http://localhost/ImageSave/${session_edit.data[0].ssds}`)
-                                }}>{session_edit.data[0].ssds}</a></u>
+                                <Input type="text" hidden placeholder="SSDS" value={valname} />
+                                {
+                                    <u style={{ color: '#0958d9' }}><a onClick={() => {
+                                        window.open(`http://localhost/ImageSave/${filesnameedit}`)
+                                    }}>{filesnameedit}</a></u>
+                                }
+                            </Form.Item>
+                        ) : (
+                            <Form.Item
+                                name="ssds"
+                                label="SSDS"
+                                labelAlign="left"
+
+                                rules={[{ required: true, message: 'Nofile' }]}
+                            >
+                                <Input type="file" onChange={onChangeHandler} value={valname} />
                             </Form.Item>
                         )}
                         <Form.Item
@@ -310,13 +328,6 @@ function Fristpage() {
                         >
                             <Select placeholder="Please select a country" >
                                 <Option selected value={session.dept}>{session.dept}</Option>
-                                {/* <Option value="PD 1">PD 1</Option>
-                                <Option value="PD 2">PD 2</Option>
-                                <Option value="PD 3">PD 3</Option>
-                                <Option value="PD 4">PD 4</Option>
-                                <Option value="WHL #3">WHL #3</Option>
-                                <Option value="WHL #5">WHL #5</Option>
-                                <Option value="WHL #6">WHL #6</Option> */}
                             </Select>
                         </Form.Item>
                         <Form.Item
@@ -953,9 +964,6 @@ function Fristpage() {
                     </Form>
                 </Card>
             </div>
-            {/* <ConfigProvider locale={th_TH}>
-                1312321
-            </ConfigProvider> */}
         </>
     )
 }

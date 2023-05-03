@@ -1,65 +1,7 @@
-// import Container from 'react-bootstrap/Container';
-// import Nav from 'react-bootstrap/Nav';
-// import Navbar from 'react-bootstrap/Navbar';
-// import NavDropdown from 'react-bootstrap/NavDropdown';
-// import Login from '../login';
-// import { Link, Outlet } from 'react-router-dom';
-// import { useState, useEffect } from 'react';
-// import { useNavigate } from "react-router-dom";
-
-// function BasicExample() {
-//   let data: string = sessionStorage.getItem("data") || '';
-//   const [isLoggenIn, setisLoggenIn] = useState('');
-//   const navigate = useNavigate();
-//   if (data.length > 0) {
-//     // useEffect(() => {
-//       let session = JSON.parse(data);
-//       setisLoggenIn(session.logged_in);
-//     // }, [data])
-//   }
-//   return (
-//     <>
-//       <Navbar bg="dark" variant="dark">
-//         <Container>
-//           <Navbar.Brand href="#home">Navbar</Navbar.Brand>
-//           <Nav className="me-auto">
-//             <Nav.Link >
-//               <Link to={"/"} >Login</Link>
-//             </Nav.Link>
-//             {isLoggenIn == "TRUE" ? (
-//               <>
-//                 <Nav.Link >
-//                   <Link to={"/Loginsuccess"}>Home</Link>
-//                 </Nav.Link><Nav.Link >
-//                   <Link to={"/Chemical"}>Chemical</Link>
-//                 </Nav.Link>
-//               </>
-//             ) : ('')};
-//           </Nav>
-//           <Nav.Link href="#deets">aa</Nav.Link>
-//           <Nav>
-//             <Nav.Link eventKey={2} href="#memes">
-//               aa
-//             </Nav.Link>
-//           </Nav>
-
-//         </Container>
-//       </Navbar>
-
-//       <Outlet />
-//     </>
-//   );
-// }
-
-// export default BasicExample;
-
 import React, { useState, useEffect } from 'react';
 import {
   DesktopOutlined,
   FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme, Row, Col } from 'antd';
@@ -69,9 +11,6 @@ import { useNavigate } from "react-router-dom";
 import Loginsuccess from './loginsuccess';
 import Page from './loginsuccess'
 import Chemical from './Chemical';
-import { Session } from 'inspector';
-import Indexpage from './kpipage/indexpage';
-import Home from './kpipage/home';
 import Indexchemical from './Pagesteps/Home_division';
 import Safety_page from './Pagesteps/safety_page';
 const { Header, Content, Footer, Sider } = Layout;
@@ -98,11 +37,9 @@ function App() {
     token: { colorBgContainer },
   } = theme.useToken();
   const navigate = useNavigate();
-  const [isLoggenIn, setisLoggenIn] = useState('');
   let data: string = sessionStorage.getItem("data") || '{}';
   let session = JSON.parse(data);
-  const [current, setCurrent] = useState('');
-
+  const [current, setCurrent] = useState('/safety_page');
   const items_safety: MenuItem[] = [
     getItem('SAFETY PAGE', '/safety_page', <DesktopOutlined />),
     getItem('HOME DIVISION', '/Home_Division', <FileOutlined />),
@@ -117,39 +54,90 @@ function App() {
     getItem('Signout', '/signout', <FileOutlined />),
 
   ];
+
+  const menu_edit: string = localStorage.getItem('menu_edit') || 'null';
+  const safety_manage: string = localStorage.getItem('safety_manage') || 'null';
+  const update_reject_ok: string = localStorage.getItem('update_reject_ok') || 'null';
+  const update_ok: string = localStorage.getItem('update_ok') || 'null';
+  const insert_ok: string = localStorage.getItem('insert_ok') || 'null';
+
   const onClick: MenuProps['onClick'] = (e) => {
-    setCurrent(e.key);
+
     if (e.key === '/signout') {
       navigate('/Login')
       sessionStorage.removeItem("data");
     }
     else if (e.key === '/Chemical') {
       sessionStorage.removeItem('edit_data');
+      sessionStorage.removeItem('menu_edit');
       navigate(e.key, { state: { query: e.key } })
+      setCurrent(e.key)
+    }
+    else if (e.key === '/safety_page') {
+      navigate(e.key, { state: { query: e.key } })
+      setCurrent(e.key)
     }
     else if (e.key === '/Home_Division') {
+
       sessionStorage.setItem('division_check', session.dept);
       navigate(e.key, { state: { query: e.key } })
+      setCurrent(e.key)
     }
-
     else {
-      navigate(e.key, { state: { query: e.key } })
+      if (menu_edit !== 'null') {
+        navigate(menu_edit, { state: { query: menu_edit } })
+      }
+      else if (safety_manage !== 'null') {
+        navigate('/Chemical', { state: { query: '/Chemical' } })
+      } else if (update_reject_ok !== 'null') {
+        navigate(update_reject_ok, { state: { query: update_reject_ok } })
+      }
+      else if (update_ok !== 'null') {
+        navigate(update_ok, { state: { query: update_ok } })
+      }
+      else if (insert_ok !== 'null') {
+        navigate(insert_ok, { state: { query: insert_ok } })
+      } else {
+        navigate(e.key, { state: { query: e.key } })
+      }
     }
-    // if (sessionStorage.getItem('menu_edit') == 'checkMenuedit') {
-    //   navigate('/Chemical', { state: { query: '/Chemical' } })
-    //   console.log(sessionStorage.getItem('menu_edit'))
-    //   sessionStorage.removeItem('menu_edit');
-    // }
   };
-  // const test1 = sessionStorage.getItem('edit_data') || '{}';
+  useEffect(() => {
+    if (menu_edit !== 'null') {
+      setCurrent(menu_edit)
+      localStorage.removeItem('menu_edit');
+    }
+  }, [menu_edit])
 
-  // useEffect(() => {
-  //   if(test1 != '{}'){
-  //     navigate('/Chemical', { state: { query:'/Chemical' } })
-  //     console.log('test1')
-  //   }
-  // }, [])
+  useEffect(() => {
+    if (safety_manage !== 'null') {
+      setCurrent('/Chemical')
+      localStorage.removeItem('safety_manage');
+    }
+  }, [safety_manage])
 
+  useEffect(() => {
+    if (update_reject_ok !== 'null') {
+      setCurrent(update_reject_ok)
+      localStorage.removeItem('update_reject_ok');
+    }
+  }, [update_reject_ok])
+
+  useEffect(() => {
+    if (update_ok !== 'null') {
+      setCurrent(update_ok)
+      localStorage.removeItem('update_ok');
+    }
+  }, [update_ok])
+
+  useEffect(() => {
+    if (insert_ok !== 'null') {
+      setCurrent(insert_ok)
+      localStorage.removeItem('insert_ok');
+    }
+  }, [insert_ok])
+
+  // console.log(current)
 
   return (
     <>
@@ -161,18 +149,17 @@ function App() {
               {session.dept == "ADMIN" ? (
                 <Menu
                   onClick={onClick}
-                  openKeys={['/Login']}
-                  defaultSelectedKeys={['/safety_page']}
+                  defaultOpenKeys={['/safety_page']}
+                  selectedKeys={[current]}
                   mode="inline"
                   theme="dark"
                   items={items_safety}
                 />
-
               ) : (
                 <Menu
                   onClick={onClick}
-                  openKeys={['/Login']}
-                  defaultSelectedKeys={['/Home_Division']}
+                  defaultOpenKeys={['/Home_Division']}
+                  selectedKeys={[current]}
                   mode="inline"
                   theme="dark"
                   items={items_more}
@@ -196,6 +183,7 @@ function Contents() {
       <Routes>
         <Route path="/" element={<Page />}></Route>
         <Route path="/safety_page" element={<Safety_page />}></Route>
+        <Route path="/Login" element={<Login />}></Route>
         <Route path="/Loginsuccess" element={<Loginsuccess />}></Route>
         <Route path="/Home_Division" element={<Indexchemical />}></Route>
         <Route path="/Chemical" element={<Chemical />}></Route>

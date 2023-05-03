@@ -1,13 +1,3 @@
-/* // .bg-reds {
-//   background: yellow;
-// }
-// .bg-red {
-//   background: red;
-// }
-*/
-// .ant-table-row {
-//   color: blue;
-// }
 .ant-table-thead .ant-table-cell {
   background-color: #2a337c !important;
   color: #d9d9d9 !important;
@@ -15,7 +5,6 @@
   font-weight: 350 !important;
   padding: 5px 10px !important;
   vertical-align: middle;
-  // border-start-start-radius: 8px;
 }
 .ant-table-cell {
   border-top: 0.1mm solid #bfbfbf;
@@ -29,23 +18,19 @@ a:hover {
   color: #69b1ff !important;
 }
 
-.row-light .ant-table-cell,
-.ant-table-cell:hover {
+.row-light .ant-table-cell {
   background-color: #ffccc7 !important;
-  // color: #ffffff;
 }
 
 .row-dark .ant-table-cell,
- .ant-table-cell:hover {
+.ant-table-cell:hover {
   background-color: #fadb14;
   color: #000000;
-  // background-color: #ffffff !important;
 }
 
 .row-default .ant-table-cell {
-  background-color: #ffffff  !important;
+  background-color: #ffffff !important;
   color: #000000;
-  // background-color: #ffffff !important;
 }
 .ant-table-row .ant-table-row-level-0 > td {
   background: unset;

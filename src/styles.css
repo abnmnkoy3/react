@@ -10,10 +10,6 @@
   flex-direction: column;
 }
 
-/* .login-container {
-    width: 400px;
-  } */
-
 .form {
   display: flex;
   border: 1px solid #ddd;
@@ -36,13 +32,6 @@ input {
 .error {
   color: red;
   font-weight: bold;
-}
-
-.useContext {
-  display: flex;
-  flex-direction: column;
-  width: 400px;
-  margin: 20px auto 500px;
 }
 
 .todoContainer {

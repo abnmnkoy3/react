@@ -4,8 +4,6 @@ import type { ColumnsType } from 'antd/es/table';
 import { useState, useEffect } from 'react';
 import './chemical.scss';
 import { Image } from 'antd';
-import { Document } from 'react-pdf';
-import { hover } from '@testing-library/user-event/dist/hover';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
@@ -13,11 +11,11 @@ function Safety_page() {
     const [Data_chemical, setData_chemical] = useState<DataType[]>();
     const [visible, setVisible] = useState(false);
     const [valimg, setValimg] = useState('');
-    const [Substr, setSubstr] = useState('');
     const [loading, setLoading] = useState(false);
     const [edit_id, set_edit_id] = useState('');
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
+
     interface DataType {
         id: any;
         ssds: any;
@@ -73,27 +71,6 @@ function Safety_page() {
         note: string;
         status: string;
     }
-
-    // const onManage = (value: any) => {
-    //     const fd = new FormData();
-    //     set_edit_id(value)
-    //     fd.append('id_select', edit_id);
-
-    //     axios.post("http://localhost:3001/data_edit", { // receive two parameter endpoint url ,form data 
-    //         id_select: edit_id
-    //     }).then((res) => { // then print response status
-    //         if (res) {
-    //             let session = JSON.stringify(res);
-    //             sessionStorage.setItem("edit_data", session);
-    //             set_edit_id('')
-    //             navigate("/Chemical");
-    //         } else {
-    //             console.log('error')
-    //             setOpen(true)
-    //         }
-    //     })
-    // }
-
     const columns: ColumnsType<DataType> = [
         {
             title: 'Attached : SDS',
@@ -204,13 +181,13 @@ function Safety_page() {
                 let color;
                 let text_status;
                 if (status.status === '1') {
-                    color = 'cyan';
+                    color = '#389e0d';
                     text_status = 'จัดการ'
                 } else if (status.status === '2') {
                     color = '#389e0d';
                     text_status = 'ขึ้นทะเบียนแล้ว'
                 } else if (status.status === '3') {
-                    color = '#1677ff';
+                    color = '#13c2c2';
                     text_status = 'Rejected'
                 }
                 else if (status.status === '4') {
@@ -226,7 +203,8 @@ function Safety_page() {
                                 }).then((res) => {
                                     if (res) {
                                         let session = JSON.stringify(res);
-                                        sessionStorage.setItem("edit_data", session);
+                                        localStorage.setItem("safety_manage", session);
+                                        sessionStorage.setItem("edit_data2", '/Chemical');
                                         set_edit_id('')
                                         navigate("/Chemical");
                                     } else {
@@ -235,17 +213,20 @@ function Safety_page() {
                                 })
                             }}>{text_status}</a>
                         </Tag>
-                        <Tag color='red' key='operation'>
+                        <Tag color='#13c2c2' key='operation'>
                             <a id={status.id} onClick={function (e) {
                                 axios.post("http://localhost:3001/rejected_chemical", {
                                     id: e.currentTarget.id
                                 }).then((res) => {
+                                    setLoading(true)
                                     if (res) {
                                         let session = JSON.stringify(res);
-                                        sessionStorage.setItem("edit_data", session);
+                                        sessionStorage.setItem("safety_manage", session);
+                                        alert('Rejected ข้อมูลดังกล่าวเสร็จสิ้น');
+                                        fetchData()
                                         set_edit_id('')
                                         setData_chemical([])
-                                        fetchData()
+                                        setLoading(false)
                                     } else {
                                         console.log('error')
                                     }
@@ -253,17 +234,15 @@ function Safety_page() {
                             }}>Reject</a>
                         </Tag>
                     </Space>
-
                 );
             },
         },
     ];
 
     const data: DataType[] = [];
+    const data_table: DataType[] = [];
     const fetchData = () => {
-        // console.log('test')
         setLoading(true);
-        const data_table: DataType[] = [];
         fetch('http://localhost:3001/get_pending', {
             method: 'get',
         })
@@ -271,8 +250,8 @@ function Safety_page() {
             .then((res) => {
                 for (let i = 0; i < res.length; i++) {
                     setData_chemical(res);
-                    setLoading(false);
                 }
+                setLoading(false);
             }, (error) => {
                 setLoading(false);
             });
@@ -304,7 +283,9 @@ function Safety_page() {
                     }
                 }
                 }
-                columns={columns} dataSource={Data_chemical} scroll={{ x: 1300 }} />
+                columns={columns} dataSource={Data_chemical} scroll={{ x: 1300 }}
+                loading={loading}
+            />
 
 
         </>
