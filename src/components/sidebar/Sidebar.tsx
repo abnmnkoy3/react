@@ -15,33 +15,33 @@ import BasicExample from '../Narbar_menu';
 // import MainView from './main/MainView';
 
 // import PageNotFoundView from './error/PageNotFoundView';
-const router = createBrowserRouter([
-    {
-        element: <BasicExample />,
-        children: [
-            {
-                path: "/",
-                element: < Login />
-            },
-            {
-                path: "/Loginsuccess",
-                element: < Loginsuccess />
-            },
-            {
-                path: "/Chemical",
-                element: < Chemical />
-            }
-        ]
-    }
-])
+// const router = createBrowserRouter([
+//     {
+//         element: <BasicExample />,
+//         children: [
+//             {
+//                 path: "/",
+//                 element: < Login />
+//             },
+//             {
+//                 path: "/Loginsuccess",
+//                 element: < Loginsuccess />
+//             },
+//             {
+//                 path: "/Chemical",
+//                 element: < Chemical />
+//             }
+//         ]
+//     }
+// ])
 
-function App() {
-    return (
-        <div>
-            <RouterProvider router={router} />
-        </div>
-    );
-}
+// function App() {
+//     return (
+//         <div>
+//             <RouterProvider router={router} />
+//         </div>
+//     );
+// }
 // function App() {
 //     return (
 //         <div className='App'>
@@ -56,4 +56,4 @@ function App() {
 //         </div>
 //     )
 // }
-export default App;
+// export default App;

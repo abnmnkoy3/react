@@ -28,3 +28,25 @@ u:hover {
 a:hover {
   color: #69b1ff !important;
 }
+
+.row-light .ant-table-cell,
+.ant-table-cell:hover {
+  background-color: #ffccc7 !important;
+  // color: #ffffff;
+}
+
+.row-dark .ant-table-cell,
+ .ant-table-cell:hover {
+  background-color: #fadb14;
+  color: #000000;
+  // background-color: #ffffff !important;
+}
+
+.row-default .ant-table-cell {
+  background-color: #ffffff  !important;
+  color: #000000;
+  // background-color: #ffffff !important;
+}
+.ant-table-row .ant-table-row-level-0 > td {
+  background: unset;
+}

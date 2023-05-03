@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // import { Divider, Steps } from 'antd';
 import Login from '../login'
-import Fristpage from './Pagesteps/Firstpage';
+import Fristpage from './Pagesteps/Management_chemical';
 const App: React.FC = () => {
   const [current, setCurrent] = useState(0);
 

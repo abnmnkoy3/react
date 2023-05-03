@@ -1,11 +1,14 @@
 import React from 'react';
-import { Space, Table, Tag } from 'antd';
+import { Modal, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState, useEffect } from 'react';
 import './chemical.scss';
 import { Image } from 'antd';
 import { Document } from 'react-pdf';
 import { hover } from '@testing-library/user-event/dist/hover';
+import { useNavigate } from "react-router-dom";
+import axios from 'axios';
+
 function Safety_page() {
     const [Data_chemical, setData_chemical] = useState<DataType[]>();
     const [visible, setVisible] = useState(false);
@@ -13,7 +16,8 @@ function Safety_page() {
     const [Substr, setSubstr] = useState('');
     const [loading, setLoading] = useState(false);
     const [edit_id, set_edit_id] = useState('');
-
+    const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
     interface DataType {
         id: any;
         ssds: any;
@@ -70,39 +74,25 @@ function Safety_page() {
         status: string;
     }
 
-    // const onFinish = (values: any) => {
-
-    //     let id_edit = values;
-    //     console.log(id_edit)
-
+    // const onManage = (value: any) => {
     //     const fd = new FormData();
-    //     fd.append('id', id_edit);
+    //     set_edit_id(value)
+    //     fd.append('id_select', edit_id);
 
-    //     fetch(`https://kpi.vandapac.com/insert_test_check`, {
-    //         method: 'POST',
-    //         body: fd
+    //     axios.post("http://localhost:3001/data_edit", { // receive two parameter endpoint url ,form data 
+    //         id_select: edit_id
+    //     }).then((res) => { // then print response status
+    //         if (res) {
+    //             let session = JSON.stringify(res);
+    //             sessionStorage.setItem("edit_data", session);
+    //             set_edit_id('')
+    //             navigate("/Chemical");
+    //         } else {
+    //             console.log('error')
+    //             setOpen(true)
+    //         }
     //     })
-    //         .then(data => data.json())
-    //         .then(data => {
-    //             console.log('ok')
-    //         });
-
-
     // }
-
-
-
-    useEffect(() => {
-        // childToParent(state)
-        // handleOnChange(edit_id)
-        const handleOnChange = (event: { target: { value: any } }) => {
-            // set_edit_id(event.target.value);
-            console.log('adaw')
-        };
-        console.log(edit_id)
-    }, [edit_id]);
-
-
 
     const columns: ColumnsType<DataType> = [
         {
@@ -229,16 +219,41 @@ function Safety_page() {
                 }
                 return (
                     <Space align="center">
-                        <input hidden type="text" id="test" value={status.id} />
                         <Tag color={color} key='status' >
-                            <a onClick={() => {
-                                set_edit_id(status.id)
+                            <a id={status.id} onClick={function (e) {
+                                axios.post("http://localhost:3001/data_edit", {
+                                    id: e.currentTarget.id
+                                }).then((res) => {
+                                    if (res) {
+                                        let session = JSON.stringify(res);
+                                        sessionStorage.setItem("edit_data", session);
+                                        set_edit_id('')
+                                        navigate("/Chemical");
+                                    } else {
+                                        console.log('error')
+                                    }
+                                })
                             }}>{text_status}</a>
                         </Tag>
                         <Tag color='red' key='operation'>
-                            <a >Reject</a>
+                            <a id={status.id} onClick={function (e) {
+                                axios.post("http://localhost:3001/rejected_chemical", {
+                                    id: e.currentTarget.id
+                                }).then((res) => {
+                                    if (res) {
+                                        let session = JSON.stringify(res);
+                                        sessionStorage.setItem("edit_data", session);
+                                        set_edit_id('')
+                                        setData_chemical([])
+                                        fetchData()
+                                    } else {
+                                        console.log('error')
+                                    }
+                                })
+                            }}>Reject</a>
                         </Tag>
                     </Space>
+
                 );
             },
         },
@@ -246,10 +261,11 @@ function Safety_page() {
 
     const data: DataType[] = [];
     const fetchData = () => {
+        // console.log('test')
         setLoading(true);
         const data_table: DataType[] = [];
-        fetch('https://kpi.vandapac.com/data_chemical_pending', {
-            method: 'POST',
+        fetch('http://localhost:3001/get_pending', {
+            method: 'get',
         })
             .then((res) => res.json())
             .then((res) => {
@@ -265,7 +281,33 @@ function Safety_page() {
         fetchData();
     }, []);
     return (
-        <Table columns={columns} dataSource={Data_chemical} scroll={{ x: 1300 }} />
+        <>
+            <Modal
+                title="Modal 1000px width"
+                centered
+                style={{ top: 20 }}
+                open={open}
+                onOk={() => setOpen(false)}
+                onCancel={() => setOpen(false)}
+                width={1000}
+            >
+
+            </Modal>
+            <Table
+                rowClassName={(record, index) => {
+                    if (record.status === '3') {
+                        return 'row-light';
+                    } else if (record.status === '4') {
+                        return 'row-dark';
+                    } else {
+                        return 'row-default';
+                    }
+                }
+                }
+                columns={columns} dataSource={Data_chemical} scroll={{ x: 1300 }} />
+
+
+        </>
     );
 }
 

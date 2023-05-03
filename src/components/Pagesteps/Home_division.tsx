@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Children } from 'react';
 import { Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useState, useEffect } from 'react';
@@ -6,13 +6,15 @@ import './chemical.scss';
 import { Image } from 'antd';
 import { Document } from 'react-pdf';
 import { hover } from '@testing-library/user-event/dist/hover';
+import axios from 'axios';
+import { Navigate, useNavigate } from "react-router-dom";
 function Indexchemical() {
     const [Data_chemical, setData_chemical] = useState<DataType[]>();
     const [visible, setVisible] = useState(false);
     const [valimg, setValimg] = useState('');
     const [Substr, setSubstr] = useState('');
     const [loading, setLoading] = useState(false);
-
+    const navigate = useNavigate();
     interface DataType {
         // id: React.Key;
         ssds: any;
@@ -78,8 +80,9 @@ function Indexchemical() {
             fixed: 'left',
             render: (text) => {
                 var index = text.indexOf('.');
-                let check = text.substr(index) == '.pdf' ? '' : '1';
-                if (check == '1') {
+                let check = text.substr(index) === '.jpg' || '.png' || '.jpeg' ? '1' : '';
+                // console.log(check)
+                if (text.substr(index) === '.jpg' || text.substr(index) === '.png' || text.substr(index) === '.jpeg') {
                     return (
                         <>
                             <u style={{ color: '#0958d9' }}><a style={{ color: '#0958d9' }} id={text} onClick={() => {
@@ -174,7 +177,7 @@ function Indexchemical() {
             key: 'status',
             fixed: 'right',
             align: 'center',
-            width: 120,
+            width: 150,
             render: (status) => {
                 // console.log(status)
                 let color;
@@ -186,7 +189,7 @@ function Indexchemical() {
                     color = '#389e0d';
                     text_status = 'ขึ้นทะเบียนแล้ว'
                 } else if (status.status === '3') {
-                    color = '#1677ff';
+                    color = 'red';
                     text_status = 'Rejected'
                 }
                 else if (status.status === '4') {
@@ -195,9 +198,30 @@ function Indexchemical() {
                 }
                 return (
                     <Space align="center">
-                        <Tag color={color} key='operation'>
+                        {status.status == "3" ? (
+                            <Tag color={color} key='operation'>
+                                <a id={status.id} onClick={function (e) {
+                                    axios.post("http://localhost:3001/data_edit", {
+                                        id: e.currentTarget.id
+                                    }).then((res) => {
+                                        if (res) {
+                                            let session = JSON.stringify(res);
+                                            sessionStorage.setItem("edit_data", session);
+                                            sessionStorage.setItem('reject_change', 'reject');
+                                            sessionStorage.setItem('menu_edit', 'checkMenuedit');
+                                            // set_edit_id('')
+                                            navigate("/Chemical");
+                                            // <Children />
+                                        } else {
+                                            console.log('error')
+                                        }
+                                    })
+                                }}>แก้ไข</a>
+                            </Tag>
+                        ) : (<Tag color={color} key='operation'>
                             {text_status}
-                        </Tag>
+                        </Tag>)}
+
                     </Space>
                 );
             },
@@ -207,9 +231,15 @@ function Indexchemical() {
     const data: DataType[] = [];
     const fetchData = () => {
         setLoading(true);
+        var division_check_2 = sessionStorage.getItem('division_check') || '{}';
+        const customHeaders = {
+            "Content-Type": "application/json",
+        }
         const data_table: DataType[] = [];
-        fetch('https://kpi.vandapac.com/data_chemical_all', {
-            method: 'POST',
+        fetch('http://localhost:3001/get_chemical_all', {
+            method: 'post',
+            headers: customHeaders,
+            body: JSON.stringify({ division_check: division_check_2 }),
         })
             .then((res) => res.json())
             .then((res) => {
@@ -225,7 +255,18 @@ function Indexchemical() {
         fetchData();
     }, []);
     return (
-        <Table columns={columns} dataSource={Data_chemical} scroll={{ x: 1300 }} />
+        <Table
+            rowClassName={(record, index) => {
+                if (record.status === '3') {
+                    return 'row-light';
+                } else if (record.status === '4') {
+                    return 'row-dark';
+                } else {
+                    return 'row-default';
+                }
+            }
+            }
+            columns={columns} dataSource={Data_chemical} scroll={{ x: 1300 }} />
     );
 }
 

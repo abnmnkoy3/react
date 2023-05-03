@@ -1,32 +1,18 @@
 import React, { ChangeEvent } from 'react';
 import { useEffect, useState } from 'react';
-import { InboxOutlined, UploadOutlined } from '@ant-design/icons';
-import axios from 'axios';
+import axios, { Axios } from 'axios';
 import {
     Button,
-    Checkbox,
-    Col,
     Form,
     Input,
-    InputNumber,
-    Rate,
-    Row,
     Select,
-    Slider,
-    Switch,
-    Upload,
-    Affix,
     Card,
-    ConfigProvider,
-    message,
-    notification,
+    Empty,
 } from 'antd';
-import { DatePicker, Radio, Space } from 'antd';
-import type { SizeType } from 'antd/es/config-provider/SizeContext';
-import th_TH from 'antd/locale/th_TH';
-import type { RcFile, UploadChangeParam, UploadFile } from 'antd/es/upload/interface';
-import type { UploadProps } from 'antd';
-// import '../../index.css'
+import { DatePicker, } from 'antd';
+import { useNavigate } from "react-router-dom";
+
+import moment from "moment";
 const { Option } = Select;
 
 const formItemLayout = {
@@ -34,12 +20,21 @@ const formItemLayout = {
     wrapperCol: { span: 12 },
 };
 
-
-const onFinish = (values: any) => {
-    console.log(values);
-};
-
 function Fristpage() {
+    var division_check_2 = sessionStorage.getItem('division_check') || '{}';
+    const [disabled, setDisabled] = useState(false);
+    const [check_update, setcheck_update] = useState(false);
+    let data: string = sessionStorage.getItem("data") || '{}';
+    let session = JSON.parse(data);
+
+    useEffect(() => {
+        if (division_check_2 !== 'ADMIN') {
+            setDisabled(true)
+        } else {
+            setDisabled(false)
+        }
+    }, [])
+    const navigate = useNavigate();
     const [form] = Form.useForm();
     type SizeType = Parameters<typeof Form>[0]['size'];
     const [componentSize, setComponentSize] = useState<SizeType | 'default'>('default');
@@ -50,7 +45,8 @@ function Fristpage() {
     const [data_ind, setData_ind] = useState<DataType[]>();
     interface DataType {
         // id: React.Key;
-        ssds: any;
+        id_check: any;
+        ssds: string;
         id_ssds: string;
         division: string;
         coden_coder: string;
@@ -105,57 +101,75 @@ function Fristpage() {
     }
 
     const onFinish = (values: any) => {
-        setData_ind(values)
+        let json_to_string = JSON.stringify(values);
+        let string_to_json = JSON.parse(json_to_string);
 
-        let json_to_string = JSON.stringify(data_ind);
-        let stringt_to_json = JSON.parse(json_to_string);
-
-        Object.entries(stringt_to_json).forEach(([key, value]) => {
+        Object.entries(string_to_json).forEach(([key, value]) => {
             if (key === "ssds") {
-                stringt_to_json[key] = valname;
-                console.log(stringt_to_json[key])
+                string_to_json[key] = valname;
+                console.log(string_to_json[key])
             }
         });
-        let json_to_string_api = JSON.stringify(stringt_to_json);
+        let json_to_string_api = JSON.stringify(string_to_json);
 
         const fd = new FormData();
         fd.append('data_local', json_to_string_api);
 
-        fetch(`https://kpi.vandapac.com/insert_test_check`, {
-            method: 'POST',
-            body: fd
-        })
-            .then(data => data.json())
-            .then(data => {
-                console.log('ok')
+        if (string_to_json.id_check) {
+            let reject_change: string = sessionStorage.getItem("reject_change") || '{}';
+            // let session_reject = JSON.parse(reject_change);
+            if (reject_change !== '{}') {
+                axios.post(`http://localhost:3001/update_data_reject`, {
+                    data_set: string_to_json
+                }).then(data => {
+                    console.log('update')
+                    sessionStorage.removeItem("reject_change");
+                    navigate('/Home_Division')
+                });
+            } else {
+                axios.post(`http://localhost:3001/update_data`, {
+                    data_set: string_to_json
+                }).then(data => {
+                    console.log('update')
+                    navigate('/safety_page')
+                });
+            }
+
+            /*      UPLOAD FILE         */
+            const data = new FormData()
+            data.append('file', filesname)
+            axios.post("http://localhost:3001/upload", data, {
+            }).then(res => {
+                // console.log('update')
+            })
+        } else {
+            axios.post(`http://localhost:3001/insert_data`, {
+                data_set: string_to_json
+            }).then(data => {
+                console.log('insert')
+                navigate('/Home_Division')
             });
-
-        /*      UPLOAD FILE         */
-        const data = new FormData()
-        data.append('file', files)
-        axios.post("http://localhost:3001/upload", data, { // receive two parameter endpoint url ,form data 
-        }).then(res => { // then print response status
-            console.log(res.statusText)
-        })
-        /*      UPLOAD FILE         */
-
+            const data = new FormData()
+            data.append('file', filesname)
+            axios.post("http://localhost:3001/upload", data, { // receive two parameter endpoint url ,form data 
+            }).then(res => { // then print response status
+                // console.log('insert')
+            })
+        }
     }
 
     /*           SELECT FILE           */
-    const [files, setFiles] = useState('');
+    const [filesname, setFilesname] = useState('');
     const [Substr, setSubstr] = useState('');
     const onChangeHandler = (e: any) => {
-        setFiles(e.target.files[0]);
-        // console.log(e.target.files[0].name)
+        setFilesname(e.target.files[0]);
         setvalname(e.target.files[0].name)
 
     }
     useEffect(() => {
         var index = valname.indexOf('.');
         setSubstr(valname.substr(index))
-        console.log(Substr)
     }, [valname])
-    /*           SELECT FILE           */
 
     /*           SET FILE              */
     const [file, setFile] = useState<File>();
@@ -164,8 +178,74 @@ function Fristpage() {
             setFile(e.target.files[0]);
         }
     };
-    /*           SET FILE              */
 
+    let data_edit: string = sessionStorage.getItem("edit_data") || '{}';
+    let session_edit = JSON.parse(data_edit);
+
+    useEffect(() => {
+        if (data_edit != '{}') {
+
+            setcheck_update(true);
+            form.setFieldsValue({
+                id: session_edit.data[0].id,
+                id_check: session_edit.data[0].id,
+                id_ssds: session_edit.data[0].id_ssds,
+                // ssds_show: 'C:\\xampp\htdocs\\ImageSave\\document.pdf',
+                division: session_edit.data[0].division,
+                coden_coder: session_edit.data[0].coden_coder,
+                list_chemical_products: session_edit.data[0].list_chemical_products,
+                chemical_name: session_edit.data[0].chemical_name,
+                cas_no: session_edit.data[0].cas_no,
+                un_no: session_edit.data[0].un_no,
+                purpose_use: session_edit.data[0].purpose_use,
+                substance: session_edit.data[0].substance,
+                characteristics: session_edit.data[0].characteristics,
+                concentration: session_edit.data[0].concentration,
+                density: session_edit.data[0].density,
+                control: session_edit.data[0].control,
+                component: session_edit.data[0].component,
+                un_class: session_edit.data[0].un_class,
+                ghs_physical: session_edit.data[0].ghs_physical,
+                ghs_health: session_edit.data[0].ghs_health,
+                ghs_environmental: session_edit.data[0].ghs_environmental,
+                storage_type: session_edit.data[0].storage_type,
+                total_year: session_edit.data[0].total_year,
+                unit_1: session_edit.data[0].unit_1,
+                maximum_storage: session_edit.data[0].maximum_storage,
+                unit_2: session_edit.data[0].unit_2,
+                container_type: session_edit.data[0].container_type,
+                container_capacity: session_edit.data[0].container_capacity,
+                container_quantity: session_edit.data[0].container_quantity,
+                extinguishing: session_edit.data[0].extinguishing,
+                storage_location: session_edit.data[0].storage_location,
+                area_of_use: session_edit.data[0].area_of_use,
+                ordered_month: session_edit.data[0].ordered_month,
+                according_the_list_1: session_edit.data[0].according_the_list_1,
+                according_the_list_2: session_edit.data[0].according_the_list_2,
+                delivery_status: session_edit.data[0].delivery_status,
+                delivery_date: moment(session_edit.data[0].delivery_date),
+                order_report: session_edit.data[0].order_report,
+                order_announcement: session_edit.data[0].order_announcement,
+                hazardous_chemicals: session_edit.data[0].hazardous_chemicals,
+                measurement_record: moment(session_edit.data[0].measurement_record),
+                select_6_2: session_edit.data[0].select_6_2,
+                select_6_21: session_edit.data[0].select_6_21,
+                select_6_22: session_edit.data[0].select_6_22,
+                select_6_23: session_edit.data[0].select_6_23,
+                select_6_32: session_edit.data[0].select_6_32,
+                select_9_20: session_edit.data[0].select_9_20,
+                select_9_22: session_edit.data[0].select_9_22,
+                select_9_41: session_edit.data[0].select_9_41,
+                related_laws: session_edit.data[0].related_laws,
+                legal_compliance: session_edit.data[0].legal_compliance,
+                management: session_edit.data[0].management,
+                fm_sh_17: moment(session_edit.data[0].fm_sh_17),
+                note: session_edit.data[0].note,
+            });
+            // sessionStorage.removeItem('edit_data')
+        } else {
+        }
+    }, [])
     return (
         <>
             <div >
@@ -176,16 +256,41 @@ function Fristpage() {
                         labelWrap
                         wrapperCol={{ span: 16 }}
                         size={componentSize as SizeType}
+
                     >
                         <Form.Item
-                            name="ssds"
-                            label="SSDS"
-                            labelAlign="left"
-                            rules={[{ required: true, message: 'Please input your username!' }]}
-                        >
-                            <Input type="file" name="file" onChange={onChangeHandler} value={valname} />
-                        </Form.Item>
 
+                            name="id_check"
+                            label="id_check"
+                            hidden
+                            labelAlign="left"
+                            rules={[{ required: false, message: 'Please input your username!' }]}
+                        >
+                            <Input type="text" placeholder="ID" />
+                        </Form.Item>
+                        {check_update == false ? (
+                            <Form.Item
+                                name="ssds"
+                                label="SSDS"
+                                labelAlign="left"
+
+                                rules={[{ required: true, message: 'Please input your username!' }]}
+                            >
+                                <Input type="file" onChange={onChangeHandler} value={valname} />
+                            </Form.Item>
+                        ) : (
+                            <Form.Item
+                                name="ssds_show"
+                                label="SSDS"
+                                labelAlign="left"
+
+                                rules={[{ required: true, message: 'Please input your username!' }]}
+                            >
+                                <u style={{ color: '#0958d9' }}><a id={session_edit.data[0].ssds} onClick={() => {
+                                    window.open(`http://localhost/ImageSave/${session_edit.data[0].ssds}`)
+                                }}>{session_edit.data[0].ssds}</a></u>
+                            </Form.Item>
+                        )}
                         <Form.Item
                             name="id_ssds"
                             label="ID"
@@ -203,14 +308,15 @@ function Fristpage() {
                             labelAlign="left"
                             rules={[{ required: true, message: 'แผนกที่ใช้งาน' }]}
                         >
-                            <Select placeholder="Please select a country">
-                                <Option value="1">PD 1</Option>
-                                <Option value="2">PD 2</Option>
-                                <Option value="3">PD 3</Option>
-                                <Option value="4">PD 4</Option>
-                                <Option value="5#3">WHL #3</Option>
-                                <Option value="6">WHL #5</Option>
-                                <Option value="7">WHL #6</Option>
+                            <Select placeholder="Please select a country" >
+                                <Option selected value={session.dept}>{session.dept}</Option>
+                                {/* <Option value="PD 1">PD 1</Option>
+                                <Option value="PD 2">PD 2</Option>
+                                <Option value="PD 3">PD 3</Option>
+                                <Option value="PD 4">PD 4</Option>
+                                <Option value="WHL #3">WHL #3</Option>
+                                <Option value="WHL #5">WHL #5</Option>
+                                <Option value="WHL #6">WHL #6</Option> */}
                             </Select>
                         </Form.Item>
                         <Form.Item
@@ -250,42 +356,45 @@ function Fristpage() {
                             name="cas_no"
                             labelAlign="left"
                             label="CAS No."
-                            rules={[{ required: true, message: 'CAS No.' }]}
+                            rules={[{ required: false, message: 'CAS No.' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="CAS No."
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="un_no"
                             labelAlign="left"
                             label="UN No."
-                            rules={[{ required: true, message: 'UN' }]}
+                            rules={[{ required: false, message: 'UN' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="UN No."
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="purpose_use"
                             labelAlign="left"
                             label="วัตถุประสงค์การใช้งาน"
-                            rules={[{ required: true, message: 'วัตถุประสงค์การใช้งาน' }]}
+                            rules={[{ required: false, message: 'วัตถุประสงค์การใช้งาน' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="วัตถุประสงค์การใช้งาน"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="substance"
                             labelAlign="left"
                             label="สถานะสาร"
-                            rules={[{ required: true, message: 'สถานะสาร' }]}
+                            rules={[{ required: false, message: 'สถานะสาร' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">ของแข็ง</Option>
                                 <Option value="2">ของเหลว</Option>
                                 <Option value="3">ก๊าซ</Option>
@@ -295,42 +404,45 @@ function Fristpage() {
                             name="characteristics"
                             labelAlign="left"
                             label="ลักษณะสาร"
-                            rules={[{ required: true, message: 'ลักษณะสาร' }]}
+                            rules={[{ required: false, message: 'ลักษณะสาร' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ลักษณะสาร"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="concentration"
                             labelAlign="left"
                             label="ความเข้มข้น (%/W/W)"
-                            rules={[{ required: true, message: 'ความเข้มข้น (%/W/W)' }]}
+                            rules={[{ required: false, message: 'ความเข้มข้น (%/W/W)' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ความเข้มข้น (%/W/W)"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="density"
                             labelAlign="left"
                             label="ความหนาแน่น ( g/cm3)"
-                            rules={[{ required: true, message: 'ความหนาแน่น ( g/cm3) ' }]}
+                            rules={[{ required: false, message: 'ความหนาแน่น ( g/cm3) ' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ความหนาแน่น ( g/cm3) "
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="control"
                             labelAlign="left"
                             label="การควบคุม (ระบุชนิดวัตถุอันตราย)"
-                            rules={[{ required: true, message: 'การควบคุม (ระบุชนิดวัตถุอันตราย)' }]}
+                            rules={[{ required: false, message: 'การควบคุม (ระบุชนิดวัตถุอันตราย)' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">วัตถุอันตรายชนิดที่ 1</Option>
                                 <Option value="2">วัตถุอันตรายชนิดที่ 2</Option>
                                 <Option value="3">วัตถุอันตรายชนิดที่ 3</Option>
@@ -341,20 +453,21 @@ function Fristpage() {
                             name="component"
                             labelAlign="left"
                             label="องค์ประกอบ"
-                            rules={[{ required: true, message: 'องค์ประกอบ' }]}
+                            rules={[{ required: false, message: 'องค์ประกอบ' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="องค์ประกอบ"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="un_class"
                             labelAlign="left"
                             label="การจำแนกความเป็นอันตราย : UN  Class"
-                            rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : UN  Class' }]}
+                            rules={[{ required: false, message: 'การจำแนกความเป็นอันตราย : UN  Class' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">ประเภท 1 - ระเบิดได้ (Explosives)</Option>
                                 <Option value="2">ประเภทที่ 2 ก๊าซ (Gases)</Option>
                                 <Option value="3">ประเภทที่ 3 ของเหลวไวไฟ (Flammable Liquids)</Option>
@@ -370,9 +483,9 @@ function Fristpage() {
                             name="ghs_physical"
                             labelAlign="left"
                             label="การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ"
-                            rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ' }]}
+                            rules={[{ required: false, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านกายภาพ' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">1. วัตถุระเบิด (Explosives)</Option>
                                 <Option value="2">2. แก๊สไวไฟ (Flammable gases)</Option>
                                 <Option value="3">3. สารละอองลอยไวไฟ (Flammable aerosols)</Option>
@@ -395,9 +508,9 @@ function Fristpage() {
                             name="ghs_health"
                             labelAlign="left"
                             label="การจำแนกความเป็นอันตราย : GHS  ด้านสุขภาพ"
-                            rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านสุขภาพ' }]}
+                            rules={[{ required: false, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านสุขภาพ' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">1. ความเป็นพิษเฉียบพลัน(Acute toxicity)</Option>
                                 <Option value="2">2. การกัดกร่อน/ระคายเคืองผิวหนัง(Skin corrosion/irritation)</Option>
                                 <Option value="3">3. การทำลายดวงตาอย่างรุนแรง/การระคายเคืองต่อดวงตา(Serious eye damage/eye irritation)</Option>
@@ -414,9 +527,9 @@ function Fristpage() {
                             name="ghs_environmental"
                             labelAlign="left"
                             label="การจำแนกความเป็นอันตราย : GHS  ด้านสิ่งแวดล้อม"
-                            rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านสิ่งแวดล้อม' }]}
+                            rules={[{ required: false, message: 'การจำแนกความเป็นอันตราย : GHS  ด้านสิ่งแวดล้อม' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">1. ความเป็นอันตรายต่อสิ่งแวดล้อมทางน้ำ(Hazardous to the aquatic environment)</Option>
                                 <Option value="2">2. ความเป็นอันตรายต่อชั้นโอโซน(Hazardous to the ozone layer)</Option>
                             </Select>
@@ -425,9 +538,9 @@ function Fristpage() {
                             name="storage_type"
                             labelAlign="left"
                             label="การจำแนกความเป็นอันตราย : ประเภทการจัดเก็บ"
-                            rules={[{ required: true, message: 'การจำแนกความเป็นอันตราย : ประเภทการจัดเก็บ' }]}
+                            rules={[{ required: false, message: 'การจำแนกความเป็นอันตราย : ประเภทการจัดเก็บ' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">1 วัตถุระเบิด</Option>
                                 <Option value="2">2A ก๊าซอัด ก๊าซเหลว หรือก๊าซที่ละลายภายใต้ความดัน</Option>
                                 <Option value="3">2B ก๊าซภายใต้ความดันในภาชนะบรรจุขนาดเล็ก(กระป๋องสเปรย์)</Option>
@@ -456,20 +569,21 @@ function Fristpage() {
                             name="total_year"
                             labelAlign="left"
                             label="ปริมาณการใช้รวมต่อปี"
-                            rules={[{ required: true, message: 'ปริมาณการใช้รวมต่อปี' }]}
+                            rules={[{ required: false, message: 'ปริมาณการใช้รวมต่อปี' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ปริมาณการใช้รวมต่อปี"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="unit_1"
                             labelAlign="left"
                             label="หน่วย"
-                            rules={[{ required: true, message: 'หน่วย' }]}
+                            rules={[{ required: false, message: 'หน่วย' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">กิโลกรัม</Option>
                                 <Option value="2">ลิตร</Option>
                             </Select>
@@ -478,20 +592,21 @@ function Fristpage() {
                             name="maximum_storage"
                             labelAlign="left"
                             label="ปริมาณการจัดเก็บสูงสุด"
-                            rules={[{ required: true, message: 'ปริมาณการจัดเก็บสูงสุด' }]}
+                            rules={[{ required: false, message: 'ปริมาณการจัดเก็บสูงสุด' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ปริมาณการจัดเก็บสูงสุด"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="unit_2"
                             labelAlign="left"
                             label="หน่วย"
-                            rules={[{ required: true, message: 'หน่วย' }]}
+                            rules={[{ required: false, message: 'หน่วย' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">กิโลกรัม</Option>
                                 <Option value="2">ลิตร</Option>
                             </Select>
@@ -500,9 +615,9 @@ function Fristpage() {
                             name="container_type"
                             labelAlign="left"
                             label="ลักษณะภาชนะบรรจุ : ชนิด"
-                            rules={[{ required: true, message: 'ลักษณะภาชนะบรรจุ : ชนิด' }]}
+                            rules={[{ required: false, message: 'ลักษณะภาชนะบรรจุ : ชนิด' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">กระป๋อง</Option>
                                 <Option value="2">ถังเหล็ก</Option>
                                 <Option value="2">แกลลอนพลาสติก</Option>
@@ -518,31 +633,33 @@ function Fristpage() {
                             name="container_capacity"
                             labelAlign="left"
                             label="ลักษณะภาชนะบรรจุ : ความจุ"
-                            rules={[{ required: true, message: 'ลักษณะภาชนะบรรจุ : ความจุ' }]}
+                            rules={[{ required: false, message: 'ลักษณะภาชนะบรรจุ : ความจุ' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ลักษณะภาชนะบรรจุ : ความจุ"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="container_quantity"
                             labelAlign="left"
                             label="ลักษณะภาชนะบรรจุ : จำนวน"
-                            rules={[{ required: true, message: 'ลักษณะภาชนะบรรจุ : จำนวน' }]}
+                            rules={[{ required: false, message: 'ลักษณะภาชนะบรรจุ : จำนวน' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ลักษณะภาชนะบรรจุ : จำนวน"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="extinguishing"
                             labelAlign="left"
                             label="สารที่ใช้ดับเพลิง"
-                            rules={[{ required: true, message: 'สารที่ใช้ดับเพลิง' }]}
+                            rules={[{ required: false, message: 'สารที่ใช้ดับเพลิง' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">ผงเคมีแห้ง (Dry Chemical)</Option>
                                 <Option value="2">น้ำยาเหลวระเหย</Option>
                                 <Option value="3">ก๊าซคาร์บอนไดออกไซด์ (CO2) </Option>
@@ -554,64 +671,69 @@ function Fristpage() {
                             name="storage_location"
                             labelAlign="left"
                             label="สถานที่จัดเก็บ"
-                            rules={[{ required: true, message: 'สถานที่จัดเก็บ' }]}
+                            rules={[{ required: false, message: 'สถานที่จัดเก็บ' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="สถานที่จัดเก็บ"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="area_of_use"
                             labelAlign="left"
                             label="พื้นที่ใช้งาน"
-                            rules={[{ required: true, message: 'พื้นที่ใช้งาน' }]}
+                            rules={[{ required: false, message: 'พื้นที่ใช้งาน' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="พื้นที่ใช้งาน"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="ordered_month"
                             labelAlign="left"
                             label="ปริมาณที่สั่งซื้อ/เดือน"
-                            rules={[{ required: true, message: 'ปริมาณที่สั่งซื้อ/เดือน' }]}
+                            rules={[{ required: false, message: 'ปริมาณที่สั่งซื้อ/เดือน' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ปริมาณที่สั่งซื้อ/เดือน"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="according_the_list_1"
                             labelAlign="left"
                             label="ลำดับที่ตามตารางบัญชีรายชื่อสารเคมีอันตราย/1"
-                            rules={[{ required: true, message: 'ลำดับที่ตามตารางบัญชีรายชื่อสารเคมีอันตราย/1' }]}
+                            rules={[{ required: false, message: 'ลำดับที่ตามตารางบัญชีรายชื่อสารเคมีอันตราย/1' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ลำดับที่ตามตารางบัญชีรายชื่อสารเคมีอันตราย/1"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="according_the_list_2"
                             labelAlign="left"
                             label="ลำดับที่ตามบัญชีรายชื่อวัตถุอันตรายแนบท้ายประกาศกระทรวงอุตสาหกรรม/2"
-                            rules={[{ required: true, message: 'ลำดับที่ตามบัญชีรายชื่อวัตถุอันตรายแนบท้ายประกาศกระทรวงอุตสาหกรรม/2' }]}
+                            rules={[{ required: false, message: 'ลำดับที่ตามบัญชีรายชื่อวัตถุอันตรายแนบท้ายประกาศกระทรวงอุตสาหกรรม/2' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ลำดับที่ตามบัญชีรายชื่อวัตถุอันตรายแนบท้ายประกาศกระทรวงอุตสาหกรรม/2"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="delivery_status"
                             labelAlign="left"
                             label="สถานะการส่ง สอ.1"
-                            rules={[{ required: true, message: 'สถานะการส่ง สอ.1' }]}
+                            rules={[{ required: false, message: 'สถานะการส่ง สอ.1' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
                                 <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
                             </Select>
@@ -620,58 +742,61 @@ function Fristpage() {
                             name="delivery_date"
                             labelAlign="left"
                             label="วันที่ส่ง สอ.1"
-                            rules={[{ required: true, message: 'วันที่ส่ง สอ.1' }]}
+                            rules={[{ required: false, message: 'วันที่ส่ง สอ.1' }]}
                         >
-                            <DatePicker style={{ width: '100%' }} />
+                            <DatePicker style={{ width: '100%' }} disabled={disabled} />
                         </Form.Item>
                         <Form.Item
                             name="order_report"
                             labelAlign="left"
                             label="ลำดับที่ยื่นส่งรายงาน สอ.1 ตาม FM-SH-72"
-                            rules={[{ required: true, message: 'ลำดับที่ยื่นส่งรายงาน สอ.1 ตาม FM-SH-72' }]}
+                            rules={[{ required: false, message: 'ลำดับที่ยื่นส่งรายงาน สอ.1 ตาม FM-SH-72' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ลำดับที่ยื่นส่งรายงาน สอ.1 ตาม FM-SH-72"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="order_announcement"
                             labelAlign="left"
                             label="ลำดับที่ตามประกาศ ฯ เรื่อง การให้แจ้งข้อเท็จจริง (วอ./อก.7)/3"
-                            rules={[{ required: true, message: 'ลำดับที่ตามประกาศ ฯ เรื่อง การให้แจ้งข้อเท็จจริง (วอ./อก.7)/3' }]}
+                            rules={[{ required: false, message: 'ลำดับที่ตามประกาศ ฯ เรื่อง การให้แจ้งข้อเท็จจริง (วอ./อก.7)/3' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="ลำดับที่ตามประกาศ ฯ เรื่อง การให้แจ้งข้อเท็จจริง (วอ./อก.7)/3"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="hazardous_chemicals"
                             labelAlign="left"
                             label="สารเคมีอันตรายที่ต้องตรวจวัด"
-                            rules={[{ required: true, message: 'สารเคมีอันตรายที่ต้องตรวจวัด ' }]}
+                            rules={[{ required: false, message: 'สารเคมีอันตรายที่ต้องตรวจวัด ' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="สารเคมีอันตรายที่ต้องตรวจวัด"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="measurement_record"
                             labelAlign="left"
                             label="บันทึกการตรวจวัด"
-                            rules={[{ required: true, message: 'บันทึกการตรวจวัด' }]}
+                            rules={[{ required: false, message: 'บันทึกการตรวจวัด' }]}
                         >
-                            <DatePicker style={{ width: '100%' }} />
+                            <DatePicker style={{ width: '100%' }} disabled={disabled} />
                         </Form.Item>
                         <Form.Item
                             name="select_6_2"
                             labelAlign="left"
                             label="6.2ประกาศ เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นำเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครอง ซึ่งวัตถุอันตรายที่กรมฯ พ.ศ. 2547"
-                            rules={[{ required: true, message: '6.2ประกาศ เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นำเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครอง ซึ่งวัตถุอันตรายที่กรมฯ พ.ศ. 2547' }]}
+                            rules={[{ required: false, message: '6.2ประกาศ เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นำเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครอง ซึ่งวัตถุอันตรายที่กรมฯ พ.ศ. 2547' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">สอดคล้อง</Option>
                                 <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
@@ -680,9 +805,9 @@ function Fristpage() {
                             name="select_6_21"
                             labelAlign="left"
                             label="6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555"
-                            rules={[{ required: true, message: '6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555' }]}
+                            rules={[{ required: false, message: '6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">สอดคล้อง</Option>
                                 <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
@@ -691,9 +816,9 @@ function Fristpage() {
                             name="select_6_22"
                             labelAlign="left"
                             label="6.22กฎกระทรวง ฉบับที่ 4 พ.ศ.2555 (ออกตามความใน พรบ.วัตถุอัตราย 2535)"
-                            rules={[{ required: true, message: '6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555' }]}
+                            rules={[{ required: false, message: '6.21ประกาศกระทรวง เรื่อง ระบบการจำแนกและการสื่อสารความเป็นอันตรายของวัตถุอันตราย พ.ศ. 2555' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">สอดคล้อง</Option>
                                 <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
@@ -702,9 +827,9 @@ function Fristpage() {
                             name="select_6_23"
                             labelAlign="left"
                             label="6.23 ประกาศกระทรวงอุตสาหกรรม เรื่องบัญชีรายชื่อวัตถุอันตราย พ.ศ. 2556"
-                            rules={[{ required: true, message: '6.23 ประกาศกระทรวงอุตสาหกรรม เรื่องบัญชีรายชื่อวัตถุอันตราย พ.ศ. 2556' }]}
+                            rules={[{ required: false, message: '6.23 ประกาศกระทรวงอุตสาหกรรม เรื่องบัญชีรายชื่อวัตถุอันตราย พ.ศ. 2556' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">สอดคล้อง</Option>
                                 <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
@@ -713,9 +838,9 @@ function Fristpage() {
                             name="select_6_32"
                             labelAlign="left"
                             label="6.32 ประกาศกระทรวงอุตสาหกรรม เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นาเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครองซึ่งวัตถุอันตรายที่กรมโรงงานอุตสาหกรรมมีอานาจหน้าที่รับผิดชอบ (ฉบับที่ 2) พ.ศ. 2563"
-                            rules={[{ required: true, message: '6.32 ประกาศกระทรวงอุตสาหกรรม เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นาเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครองซึ่งวัตถุอันตรายที่กรมโรงงานอุตสาหกรรมมีอานาจหน้าที่รับผิดชอบ (ฉบับที่ 2) พ.ศ. 2563' }]}
+                            rules={[{ required: false, message: '6.32 ประกาศกระทรวงอุตสาหกรรม เรื่อง การให้แจ้งข้อเท็จจริงของผู้ผลิต ผู้นาเข้า ผู้ส่งออก หรือผู้มีไว้ในครอบครองซึ่งวัตถุอันตรายที่กรมโรงงานอุตสาหกรรมมีอานาจหน้าที่รับผิดชอบ (ฉบับที่ 2) พ.ศ. 2563' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">สอดคล้อง</Option>
                                 <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
@@ -724,9 +849,9 @@ function Fristpage() {
                             name="select_9_20"
                             labelAlign="left"
                             label="9.20 กฎกระทรวงกำหนดมาตรฐานในการบริหารจัดการ และ ดำเนินการด้านความปลอดภัยอาชีวอนามัย และ สภาพแวดล้อมในการทำงานเกี่ยวกับสารเคมีอันตราย พ.ศ. 2556"
-                            rules={[{ required: true, message: '9.20 กฎกระทรวงกำหนดมาตรฐานในการบริหารจัดการ และ ดำเนินการด้านความปลอดภัยอาชีวอนามัย และ สภาพแวดล้อมในการทำงานเกี่ยวกับสารเคมีอันตราย พ.ศ. 2556' }]}
+                            rules={[{ required: false, message: '9.20 กฎกระทรวงกำหนดมาตรฐานในการบริหารจัดการ และ ดำเนินการด้านความปลอดภัยอาชีวอนามัย และ สภาพแวดล้อมในการทำงานเกี่ยวกับสารเคมีอันตราย พ.ศ. 2556' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">สอดคล้อง</Option>
                                 <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
@@ -735,9 +860,9 @@ function Fristpage() {
                             name="select_9_22"
                             labelAlign="left"
                             label="9.22 เรื่อง แบบบัญชีรายชื่อสารเคมีอันตรายและรายละเอียดข้อมูลความปลอดภัยของสารเคมีอันตราย สอ.1 2556"
-                            rules={[{ required: true, message: '9.22 เรื่อง แบบบัญชีรายชื่อสารเคมีอันตรายและรายละเอียดข้อมูลความปลอดภัยของสารเคมีอันตราย สอ.1 2556' }]}
+                            rules={[{ required: false, message: '9.22 เรื่อง แบบบัญชีรายชื่อสารเคมีอันตรายและรายละเอียดข้อมูลความปลอดภัยของสารเคมีอันตราย สอ.1 2556' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">สอดคล้อง</Option>
                                 <Option value="2">ไม่สอดคล้อง</Option>
                             </Select>
@@ -746,9 +871,9 @@ function Fristpage() {
                             name="select_9_41"
                             labelAlign="left"
                             label="9.41 ประกาศกระทรวงอุตสาหกรรมเรื่อง มาตรการความปลอดภัยเกี่ยวกับการจัดการสารเคมีในโรงงานอุตสาหกรรมพ.ศ. 2565"
-                            rules={[{ required: true, message: '9.41 ประกาศกระทรวงอุตสาหกรรมเรื่อง มาตรการความปลอดภัยเกี่ยวกับการจัดการสารเคมีในโรงงานอุตสาหกรรมพ.ศ. 2565' }]}
+                            rules={[{ required: false, message: '9.41 ประกาศกระทรวงอุตสาหกรรมเรื่อง มาตรการความปลอดภัยเกี่ยวกับการจัดการสารเคมีในโรงงานอุตสาหกรรมพ.ศ. 2565' }]}
                         >
-                            <Select placeholder="-- เลือก --">
+                            <Select placeholder="-- เลือก --" disabled={disabled}>
                                 <Option value="1">ยื่นส่ง สอ.1 แล้ว</Option>
                                 <Option value="2">ยังไม่ได้ส่ง สอ.1</Option>
                             </Select>
@@ -757,50 +882,53 @@ function Fristpage() {
                             name="related_laws"
                             labelAlign="left"
                             label="กฏหมายที่เกี่ยวข้อง"
-                            rules={[{ required: true, message: 'กฏหมายที่เกี่ยวข้อง' }]}
+                            rules={[{ required: false, message: 'กฏหมายที่เกี่ยวข้อง' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="กฏหมายที่เกี่ยวข้อง"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="legal_compliance"
                             labelAlign="left"
                             label="การปฎิบัติตามกฎหมาย"
-                            rules={[{ required: true, message: 'การปฎิบัติตามกฎหมาย' }]}
+                            rules={[{ required: false, message: 'การปฎิบัติตามกฎหมาย' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="การปฎิบัติตามกฎหมาย"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="management"
                             labelAlign="left"
                             label="การจัดการ/ควบคุม"
-                            rules={[{ required: true, message: 'การจัดการ/ควบคุม' }]}
+                            rules={[{ required: false, message: 'การจัดการ/ควบคุม' }]}
                         >
                             <Input
                                 type="text"
                                 placeholder="การจัดการ/ควบคุม"
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item
                             name="fm_sh_17"
                             labelAlign="left"
                             label="วันที่ทบทวนสารเคมี ตาม FM-SH-17 ล่าสุด"
-                            rules={[{ required: true, message: 'วันที่ทบทวนสารเคมี ตาม FM-SH-17 ล่าสุด' }]}
+                            rules={[{ required: false, message: 'วันที่ทบทวนสารเคมี ตาม FM-SH-17 ล่าสุด' }]}
                         >
-                            <DatePicker style={{ width: '100%' }} />
+                            <DatePicker style={{ width: '100%' }} disabled={disabled} />
                         </Form.Item>
                         <Form.Item
                             name="note"
                             labelAlign="left"
                             label="หมายเหตุ"
-                            rules={[{ required: true, message: 'หมายเหตุ' }]}
+                            rules={[{ required: false, message: 'หมายเหตุ' }]}
                         >
-                            <Select placeholder="-- เลือก --" style={{ marginRight: "25px" }}>
+                            <Select placeholder="-- เลือก --" style={{ marginRight: "25px" }} disabled={disabled}>
                                 <Option value="1">ยกเลิกการใช้งาน</Option>
                                 <Option value="2">ใช้งานอยู่</Option>
                             </Select>
@@ -814,6 +942,7 @@ function Fristpage() {
                             <Input
                                 type="text"
                                 placeholder="การจัดการ/ควบคุม" value='1'
+                                disabled={disabled}
                             />
                         </Form.Item>
                         <Form.Item {...formItemLayout}>
