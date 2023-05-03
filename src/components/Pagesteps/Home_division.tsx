@@ -10,7 +10,6 @@ function Indexchemical() {
     const [Data_chemical, setData_chemical] = useState<DataType[]>();
     const [visible, setVisible] = useState(false);
     const [valimg, setValimg] = useState('');
-    const [Substr, setSubstr] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     interface DataType {
