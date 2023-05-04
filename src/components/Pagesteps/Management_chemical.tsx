@@ -30,8 +30,10 @@ function Fristpage() {
     useEffect(() => {
         if (division_check_2 !== 'ADMIN') {
             setDisabled(true)
+            console.log(division_check_2)
         } else {
             setDisabled(false)
+            console.log(division_check_2)
         }
     }, [])
     const navigate = useNavigate();

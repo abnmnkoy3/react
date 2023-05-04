@@ -1,5 +1,6 @@
 import React, { Children } from 'react';
-import { Alert, Button, Space, Table, Tag } from 'antd';
+import { Alert, Button, Dropdown, MenuProps, Space, Table, Tag } from 'antd';
+// import { DownOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useState, useEffect } from 'react';
 import './chemical.scss';
@@ -12,6 +13,14 @@ function Indexchemical() {
     const [valimg, setValimg] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+
+    const [id_manage, set_id_manage] = useState('');
+    const [check_status, set_check_status] = useState(false);
+    const [check_status_remake, set_check_status_remake] = useState(false);
+    const [check_status_rejected, set_check_status_rejected] = useState(false);
+    const [check_status_delete, set_check_status_delete] = useState(false);
+
+
     interface DataType {
         // id: React.Key;
         ssds: any;
@@ -67,6 +76,96 @@ function Indexchemical() {
         note: string;
         status: string;
     }
+
+    const items: MenuProps['items'] = [
+        {
+            label:
+                <>
+                    <a id={id_manage} onClick={function (e) {
+                        axios.post("http://localhost:3001/data_edit", {
+                            id: e.currentTarget.id
+                        }).then((res) => {
+                            if (res) {
+                                let session = JSON.stringify(res);
+                                localStorage.setItem("safety_manage", session);
+                                sessionStorage.setItem('reject_change', 'reject');
+                                localStorage.setItem('menu_edit', '/Chemical');
+                                navigate("/Chemical", { state: true });
+                            } else {
+                                console.log('error')
+                            }
+                        })
+                    }}>แก้ไข</a>
+                </>,
+            key: '5',
+            disabled: check_status_rejected,
+        },
+        {
+            label:
+                <>
+                    <a id={id_manage} onClick={function (e) {
+                        axios.post("http://localhost:3001/disabled_chemical", {
+                            id: e.currentTarget.id
+                        }).then((res) => {
+                            if (res) {
+                                alert('ยกเลิกใช้งานสารเคมีเรียบร้อย')
+                                fetchData()
+                                navigate("/Home_Division");
+                            } else {
+                                console.log('error')
+                            }
+                        })
+                    }}>ยกเลิกใช้งาน</a>
+                </>,
+            key: '1',
+            disabled: check_status,
+        },
+        {
+            type: 'divider',
+        },
+        { //#1677ff
+            label:
+                <>
+                    <a id={id_manage} onClick={function (e) {
+                        axios.post("http://localhost:3001/remake_chemical", {
+                            id: e.currentTarget.id
+                        }).then((res) => {
+                            if (res) {
+                                alert('รอดำเนินการนำกลับมาใช้')
+                                fetchData()
+                                navigate("/Home_Division");
+                            } else {
+                                console.log('error')
+                            }
+                        })
+                    }}>นำกลับมาใช้</a>
+                </>,
+            key: '0',
+            disabled: check_status_remake,
+        },
+        {
+            type: 'divider',
+        },
+        {
+            label: <a id={id_manage} onClick={
+                function (e) {
+                    axios.post("http://localhost:3001/delete_chemical", {
+                        id: e.currentTarget.id
+                    }).then((res) => {
+                        if (res) {
+                            alert('ลบข้อมูลเสร็จสิ้น')
+                            fetchData()
+                            navigate("/Home_Division");
+                        } else {
+                            console.log('error')
+                        }
+                    })
+                }
+            } > ลบข้อมูล</a>,
+            key: '2',
+            disabled: check_status_delete
+        },
+    ];
 
     const columns: ColumnsType<DataType> = [
         {
@@ -196,36 +295,27 @@ function Indexchemical() {
                         {status.status == "3" ? (
                             <>
                                 <Tag color={color} >
-                                    <a id={status.id} onClick={function (e) {
-                                        axios.post("http://localhost:3001/data_edit", {
-                                            id: e.currentTarget.id
-                                        }).then((res) => {
-                                            if (res) {
-                                                let session = JSON.stringify(res);
-                                                localStorage.setItem("safety_manage", session);
-                                                sessionStorage.setItem('reject_change', 'reject');
-                                                localStorage.setItem('menu_edit', '/Chemical');
-                                                navigate("/Chemical", { state: true });
-                                            } else {
-                                                console.log('error')
-                                            }
-                                        })
-                                    }}>แก้ไข</a>
+                                    Rejected
                                 </Tag>
-                                <Tag color={'#f5222d'} >
-                                    <a id={status.id} onClick={function (e) {
-                                        axios.post("http://localhost:3001/delete_chemical", {
-                                            id: e.currentTarget.id
-                                        }).then((res) => {
-                                            if (res) {
-                                                alert('ลบข้อมูลเสร็จสิ้น')
-                                                fetchData()
-                                                navigate("/Home_Division");
-                                            } else {
-                                                console.log('error')
-                                            }
-                                        })
-                                    }}>ลบ</a>
+                                <Tag color={'#595959'}>
+                                    <>
+                                        { }
+                                        <Dropdown menu={{ items }} trigger={['click']}>
+
+                                            <a id={status.id} style={{ color: '#ffffff' }} onClick={
+                                                (e) => {
+                                                    e.preventDefault()
+                                                    set_id_manage(status.id)
+                                                    set_check_status(true)
+                                                    set_check_status_remake(true)
+                                                    set_check_status_rejected(false)
+                                                    set_check_status_delete(false)
+                                                }
+                                            }>
+                                                จัดการ
+                                            </a>
+                                        </Dropdown>
+                                    </>
                                 </Tag>
                             </>
                         ) : (
@@ -234,37 +324,67 @@ function Indexchemical() {
                                     {text_status}
                                 </Tag>
                                 {status.status == "2" ? (
-                                    <Tag color={'#f5222d'} >
-                                        <a id={status.id} onClick={function (e) {
-                                            axios.post("http://localhost:3001/disabled_chemical", {
-                                                id: e.currentTarget.id
-                                            }).then((res) => {
-                                                if (res) {
-                                                    alert('ยกเลิกใช้งานสารเคมีเรียบร้อย')
-                                                    fetchData()
-                                                    navigate("/Home_Division");
-                                                } else {
-                                                    console.log('error')
-                                                }
-                                            })
-                                        }}>ยกเลิกใช้งาน</a>
+                                    <Tag color={'#595959'}>
+                                        <>
+                                            <Dropdown menu={{ items }} trigger={['click']}>
+
+                                                <a id={status.id} style={{ color: '#ffffff' }} onClick={
+                                                    (e) => {
+                                                        e.preventDefault()
+                                                        set_id_manage(status.id)
+                                                        set_check_status(false)
+                                                        set_check_status_remake(true)
+                                                        set_check_status_rejected(false)
+                                                        set_check_status_delete(true)
+                                                    }
+                                                }>
+                                                    จัดการ
+                                                </a>
+                                            </Dropdown>
+                                        </>
                                     </Tag>
                                 ) : (
                                     <>
-                                        <Tag color={'#f5222d'} >
-                                            <a id={status.id} onClick={function (e) {
-                                                axios.post("http://localhost:3001/delete_chemical", {
-                                                    id: e.currentTarget.id
-                                                }).then((res) => {
-                                                    if (res) {
-                                                        alert('ลบข้อมูลเสร็จสิ้น')
-                                                        fetchData()
-                                                        navigate("/Home_Division");
-                                                    } else {
-                                                        console.log('error')
-                                                    }
-                                                })
-                                            }}>ลบ</a>
+                                        <Tag color={'#595959'}>
+                                            {status.status == "4" ? (
+                                                <>
+                                                    <Dropdown menu={{ items }} trigger={['click']}>
+
+                                                        <a id={status.id} style={{ color: '#ffffff' }} onClick={
+                                                            (e) => {
+                                                                e.preventDefault()
+                                                                set_id_manage(status.id)
+                                                                set_check_status(true)
+                                                                set_check_status_remake(false)
+                                                                set_check_status_rejected(false)
+                                                                set_check_status_delete(false)
+
+                                                            }
+                                                        }>
+                                                            จัดการ
+                                                        </a>
+                                                    </Dropdown>
+                                                </>
+                                            ) : (
+                                                <>
+
+                                                    <Dropdown menu={{ items }} trigger={['click']}>
+
+                                                        <a id={status.id} style={{ color: '#ffffff' }} onClick={
+                                                            (e) => {
+                                                                e.preventDefault()
+                                                                set_id_manage(status.id)
+                                                                set_check_status(true)
+                                                                set_check_status_remake(true)
+                                                                set_check_status_rejected(true)
+                                                                set_check_status_delete(false)
+                                                            }
+                                                        }>
+                                                            จัดการ
+                                                        </a>
+                                                    </Dropdown>
+                                                </>
+                                            )}
                                         </Tag>
                                     </>
                                 )}
@@ -280,7 +400,7 @@ function Indexchemical() {
     const data: DataType[] = [];
     const fetchData = () => {
         setLoading(true);
-        var division_check_2 = sessionStorage.getItem('division_check') || '{}';
+        var division_check_2 = sessionStorage.getItem('division_check') || '{ }';
         const customHeaders = {
             "Content-Type": "application/json",
         }
