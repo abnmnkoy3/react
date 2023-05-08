@@ -8,6 +8,15 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 function Safety_page() {
+    
+    // const socket = io("http://localhost:3000", {
+    //     withCredentials: true,
+    //     extraHeaders: {
+    //         "my-custom-header": "abcd"
+    //     }
+    // });
+    // socket.emit('test','teststranger');
+
     const [Data_chemical, setData_chemical] = useState<DataType[]>();
     const [visible, setVisible] = useState(false);
     const [valimg, setValimg] = useState('');
@@ -71,6 +80,11 @@ function Safety_page() {
         note: string;
         status: string;
     }
+
+
+
+
+
     const columns: ColumnsType<DataType> = [
         {
             title: 'Attached : SDS',
@@ -198,7 +212,7 @@ function Safety_page() {
                     <Space align="center">
                         <Tag color={color} key='status' >
                             <a id={status.id} onClick={function (e) {
-                                axios.post("http://localhost:3001/data_edit", {
+                                axios.post("http://localhost:3000/data_edit", {
                                     id: e.currentTarget.id
                                 }).then((res) => {
                                     if (res) {
@@ -215,7 +229,7 @@ function Safety_page() {
                         </Tag>
                         <Tag color='#13c2c2' key='operation'>
                             <a id={status.id} onClick={function (e) {
-                                axios.post("http://localhost:3001/rejected_chemical", {
+                                axios.post("http://localhost:3000/rejected_chemical", {
                                     id: e.currentTarget.id
                                 }).then((res) => {
                                     setLoading(true)
@@ -243,7 +257,7 @@ function Safety_page() {
     const data_table: DataType[] = [];
     const fetchData = () => {
         setLoading(true);
-        fetch('http://localhost:3001/get_pending', {
+        fetch('http://localhost:3000/get_pending', {
             method: 'get',
         })
             .then((res) => res.json())

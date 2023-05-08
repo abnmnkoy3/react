@@ -11,14 +11,29 @@ import {
 } from 'antd';
 import { DatePicker, } from 'antd';
 import { useNavigate } from "react-router-dom";
+import socketIO, { Socket } from 'socket.io-client';
 
 import moment from "moment";
+import { useContext } from 'react';
+
+const WS = 'http://localhost:3000';
+const Path = socketIO(WS);
+
 const { Option } = Select;
 
 const formItemLayout = {
     labelCol: { span: 12 },
     wrapperCol: { span: 12 },
 };
+
+
+// export const Room_test = (socket: Socket) => {
+//     socket.on('update-data', () => {
+//         console.log('user update data');
+//     })
+// }
+
+
 
 function Fristpage() {
     var division_check_2 = sessionStorage.getItem('division_check') || '{}';
@@ -46,7 +61,6 @@ function Fristpage() {
     };
     const [data_ind, setData_ind] = useState<DataType[]>();
     interface DataType {
-        // id: React.Key;
         id_check: any;
         ssds: string;
         id_ssds: string;
@@ -102,6 +116,10 @@ function Fristpage() {
         note: string;
     }
 
+
+
+
+
     const onFinish = (values: any) => {
         let json_to_string = JSON.stringify(values);
         let string_to_json = JSON.parse(json_to_string);
@@ -117,10 +135,16 @@ function Fristpage() {
         const fd = new FormData();
         fd.append('data_local', json_to_string_api);
 
+        const headers = {
+            'Content-Type': 'text/plain'
+        };
+
         if (string_to_json.id_check) {
+
+
             let reject_change: string = sessionStorage.getItem("reject_change") || '{}';
             if (reject_change !== '{}') {
-                axios.post(`http://localhost:3001/update_data_reject`, {
+                axios.post(`http://localhost:3000/update_data_reject`, {
                     data_set: string_to_json
                 }).then(data => {
                     console.log('update')
@@ -129,9 +153,12 @@ function Fristpage() {
                     localStorage.setItem('update_reject_ok', '/Home_Division');
                 });
             } else {
-                axios.post(`http://localhost:3001/update_data`, {
+                axios.post(`http://localhost:3000/update_data`, {
                     data_set: string_to_json
                 }).then(data => {
+
+                    Path.emit('update-data');
+
                     console.log('update')
                     navigate('/safety_page')
                     localStorage.setItem('update_ok', '/safety_page');
@@ -142,12 +169,12 @@ function Fristpage() {
             /*      UPLOAD FILE         */
             const data = new FormData()
             data.append('file', filesname)
-            axios.post("http://localhost:3001/upload", data, {
+            axios.post("http://localhost:3000/upload", data, {
             }).then(res => {
                 // console.log('update')
             })
         } else {
-            axios.post(`http://localhost:3001/insert_data`, {
+            axios.post(`http://localhost:3000/insert_data`, {
                 data_set: string_to_json
             }).then(data => {
                 console.log('insert')
@@ -156,7 +183,7 @@ function Fristpage() {
             });
             const data = new FormData()
             data.append('file', filesname)
-            axios.post("http://localhost:3001/upload", data, { // receive two parameter endpoint url ,form data 
+            axios.post("http://localhost:3000/upload", data, { // receive two parameter endpoint url ,form data 
             }).then(res => { // then print response status
                 // console.log('insert')
             })
@@ -276,7 +303,6 @@ function Fristpage() {
                                 <Input type="text" placeholder="ID" />
                             </Form.Item>
                         ) : (<Form.Item
-
                             name="id_checks"
                             label="id_checks"
                             hidden
@@ -966,6 +992,17 @@ function Fristpage() {
                     </Form>
                 </Card>
             </div>
+            {/* <div>
+                <div>
+                    <label htmlFor="username">Username:</label>
+                    <input id="username" type="text" value={username} onChange={handleUsernameChange} />
+                </div>
+                <div>
+                    <label htmlFor="message">Message:</label>
+                    <input id="message" type="text" value={message} onChange={handleMessageChange} />
+                    <button onClick={handleSendMessage}>Send</button>
+                </div>
+            </div> */}
         </>
     )
 }

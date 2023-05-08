@@ -3,56 +3,28 @@ import React from 'react';
 import { Button, Checkbox, Form, Input, Layout } from 'antd';
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
+import socketIO from 'socket.io-client';
 import './styles.css'
+
+const WS = 'http://localhost:3000';
+const Path = socketIO(WS);
 
 const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
 };
 
 function App() {
+
+    useEffect(() => {
+        socketIO(WS)
+    }, []);
+
+
     const [data, setData] = React.useState(null);
     const [isLoggedIn, setisLoggedIn] = useState('')
     const navigate = useNavigate();
     const [error, seterror] = useState('')
     const [isLoading, setisLoading] = useState('')
-
-
-
-    const headerStyle: React.CSSProperties = {
-        textAlign: 'center',
-        color: '#fff',
-        height: 64,
-        paddingInline: 50,
-        lineHeight: '64px',
-        backgroundColor: '#7dbcea',
-    };
-
-    const contentStyle: React.CSSProperties = {
-        textAlign: 'center',
-        minHeight: 120,
-        lineHeight: '120px',
-        color: '#fff',
-        backgroundColor: '#108ee9',
-    };
-
-    const siderStyle: React.CSSProperties = {
-        textAlign: 'center',
-        lineHeight: '120px',
-        color: '#fff',
-        backgroundColor: '#3ba0e9',
-    };
-
-    const footerStyle: React.CSSProperties = {
-        textAlign: 'center',
-        color: '#fff',
-        backgroundColor: '#7dbcea',
-    };
-
-
-
-
-
-
 
 
     const onFinish = (values: any) => {
@@ -63,6 +35,9 @@ function App() {
             fd.append('password', values.password);
             fetch(`https://kpi.vandapac.com/auth_api`, {
                 method: 'POST',
+                // headers: {
+                //     "Content-Type": "text/plain"
+                // },
                 body: fd
             })
                 .then(data => data.json())

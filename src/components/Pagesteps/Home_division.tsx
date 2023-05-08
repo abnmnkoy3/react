@@ -7,6 +7,9 @@ import './chemical.scss';
 import { Image } from 'antd';
 import axios from 'axios';
 import { Navigate, useNavigate } from "react-router-dom";
+import socketIO, { Socket } from 'socket.io-client';
+
+
 function Indexchemical() {
     const [Data_chemical, setData_chemical] = useState<DataType[]>();
     const [visible, setVisible] = useState(false);
@@ -20,6 +23,23 @@ function Indexchemical() {
     const [check_status_rejected, set_check_status_rejected] = useState(false);
     const [check_status_delete, set_check_status_delete] = useState(false);
 
+    const WS = 'http://localhost:3000';
+    const Path = socketIO(WS);
+    // const socket = io("http://localhost:3000", {
+    //     withCredentials: true,
+    //     extraHeaders: {
+    //         "my-custom-header": "abcd"
+    //     }
+    // });
+    // socket.on('test', (arg) => {
+    //     console.log('table')
+    // })
+    // useEffect(() => {
+        Path.on('update-data-success', () => {
+            fetchData();
+            console.log('test')
+        })
+    // }, [])
 
     interface DataType {
         // id: React.Key;
@@ -82,7 +102,7 @@ function Indexchemical() {
             label:
                 <>
                     <a id={id_manage} onClick={function (e) {
-                        axios.post("http://localhost:3001/data_edit", {
+                        axios.post("http://localhost:3000/data_edit", {
                             id: e.currentTarget.id
                         }).then((res) => {
                             if (res) {
@@ -104,7 +124,7 @@ function Indexchemical() {
             label:
                 <>
                     <a id={id_manage} onClick={function (e) {
-                        axios.post("http://localhost:3001/disabled_chemical", {
+                        axios.post("http://localhost:3000/disabled_chemical", {
                             id: e.currentTarget.id
                         }).then((res) => {
                             if (res) {
@@ -127,7 +147,7 @@ function Indexchemical() {
             label:
                 <>
                     <a id={id_manage} onClick={function (e) {
-                        axios.post("http://localhost:3001/remake_chemical", {
+                        axios.post("http://localhost:3000/remake_chemical", {
                             id: e.currentTarget.id
                         }).then((res) => {
                             if (res) {
@@ -149,7 +169,7 @@ function Indexchemical() {
         {
             label: <a id={id_manage} onClick={
                 function (e) {
-                    axios.post("http://localhost:3001/delete_chemical", {
+                    axios.post("http://localhost:3000/delete_chemical", {
                         id: e.currentTarget.id
                     }).then((res) => {
                         if (res) {
@@ -166,6 +186,8 @@ function Indexchemical() {
             disabled: check_status_delete
         },
     ];
+
+
 
     const columns: ColumnsType<DataType> = [
         {
@@ -405,7 +427,7 @@ function Indexchemical() {
             "Content-Type": "application/json",
         }
         const data_table: DataType[] = [];
-        fetch('http://localhost:3001/get_chemical_all', {
+        fetch('http://localhost:3000/get_chemical_all', {
             method: 'post',
             headers: customHeaders,
             body: JSON.stringify({ division_check: division_check_2 }),

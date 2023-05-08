@@ -32,12 +32,13 @@
     "react-scripts": "5.0.1",
     "sass": "^1.60.0",
     "semantic-ui-react": "^2.1.4",
+    "socket.io-client": "^4.6.1",
     "styled-components": "^5.3.9",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3006 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -72,6 +73,6 @@
       "localhost",
       ".localhost"
     ],
-    "proxy": "https://localhost:3001/ , http://localhost:80"
+    "proxy": "http://localhost:3001 , http://localhost:80 , http://localhost:3000, http://localhost:3006"
   }
 }
